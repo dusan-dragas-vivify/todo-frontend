@@ -1,7 +1,7 @@
 import React from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 import { TextField } from 'react-native-material-textfield';
-import { TextButton, RaisedTextButton } from 'react-native-material-buttons';
+import { RaisedTextButton } from 'react-native-material-buttons';
 
 export default class Login extends React.Component {
 
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         justifyContent: 'center',
-        paddingBottom: 150
+        paddingBottom: 200
     },
     text: {
         fontSize: 24,
