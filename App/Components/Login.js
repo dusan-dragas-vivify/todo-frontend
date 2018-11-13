@@ -1,5 +1,7 @@
 import React from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
+import { TextField } from 'react-native-material-textfield';
+import { TextButton, RaisedTextButton } from 'react-native-material-buttons';
 
 export default class Login extends React.Component {
 
@@ -10,12 +12,19 @@ export default class Login extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Login screen</Text>
-                <Button
+                <Text style={styles.text}>Please login</Text>
+                <TextField
+                    label='Username'
+                />
+                <TextField
+                    label='Password'
+                    secureTextEntry={true}
+                />
+                <RaisedTextButton
+                    title='Login'
+                    titleColor={'#fff'}
+                    color='#3949ab'
                     onPress={this.loginRequest.bind(this)}
-                    title="Login"
-                    color="#841584"
-                    accessibilityLabel="Learn more about this purple button"
                 />
             </View>
         );
@@ -26,7 +35,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
         justifyContent: 'center',
+        paddingBottom: 150
     },
+    text: {
+        fontSize: 24,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    }
+
 });
