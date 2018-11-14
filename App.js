@@ -2,11 +2,29 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import Dashboard from "./App/Components/Dashboard";
 import Login from "./App/Components/Login";
+import Edit from "./App/Components/Edit";
 
 const RootStack = createStackNavigator(
     {
-        Login: Login,
-        Dashboard: Dashboard
+        Login: {
+            screen: Login,
+            navigationOptions: () => ({
+                title: 'Home'
+            }),
+        },
+        Dashboard: {
+            screen: Dashboard,
+            navigationOptions: () => ({
+                title: 'Dashboard'
+            }),
+        },
+        Edit: {
+            screen: Edit,
+            navigationOptions: () => ({
+                title: 'Edit'
+            }),
+
+        }
     },
     {
         initialRouteName: 'Login',

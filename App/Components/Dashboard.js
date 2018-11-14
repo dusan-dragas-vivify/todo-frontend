@@ -49,6 +49,10 @@ export default class Dashboard extends React.Component {
         })
     };
 
+    editCard = (id) => {
+        this.props.navigation.navigate('Edit', { id: id });
+    };
+
     render() {
 
         const cardsToShow = [];
@@ -91,7 +95,7 @@ export default class Dashboard extends React.Component {
                         separator={true}
                         inColumn={false}>
                         <CardButton
-                            onPress={() => {}}
+                            onPress={this.editCard.bind(this, this.state.cards[i].id)}
                             title="Edit"
                             color="#3949ab"
                         />
@@ -109,7 +113,7 @@ export default class Dashboard extends React.Component {
             <View style={styles.container}>
                 {cardsToShow}
                 {modal}
-                <ActionButton onPress={this.addNewCard.bind(this)}/>
+                <ActionButton style={styles.plusButton} onPress={this.addNewCard.bind(this)}/>
             </View>
         );
     }
@@ -121,5 +125,11 @@ const styles = StyleSheet.create({
     },
     card: {
         flex: 0.4
+    },
+    plusButton: {
+        alignSelf: 'flex-end',
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
     }
 });
