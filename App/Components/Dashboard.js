@@ -12,7 +12,10 @@ export default class Dashboard extends React.Component {
 
         this.state = {
             numberOfCards: 0,
-            openModal: false
+            cards: [],
+            openModal: false,
+            cardTitle: '',
+            cardContent: ''
         }
     }
 
@@ -22,10 +25,15 @@ export default class Dashboard extends React.Component {
         })
     };
 
-    modalClickOk = () => {
+    modalClickAdd = () => {
         this.setState({
             openModal: false,
-            numberOfCards: this.state.numberOfCards + 1
+            numberOfCards: this.state.numberOfCards + 1,
+            cards: [...this.state.cards, {
+                id: this.state.numberOfCards + 1,
+                title: this.state.cardTitle,
+                content: this.state.cardContent
+            }]
         });
     };
 
@@ -33,47 +41,62 @@ export default class Dashboard extends React.Component {
         this.setState({ openModal: false });
     };
 
+    deleteCard = (id) => {
+        let cardToRemove = this.state.cards.findIndex( obj => obj.id === id);
+        let newObj = this.state.cards.splice(cardToRemove, 1);
+        this.setState({
+            numberOfCards: this.state.numberOfCards - 1,
+        })
+    };
+
     render() {
 
-        const cards = [];
+        const cardsToShow = [];
         let modal;
+
+        let {cardTitle} = '';
+        let {cardContent} = '';
 
         if(this.state.openModal) {
             modal = <MaterialDialog
-                        title="Add new stuff on TODO list"
+                        title="Add new stuff in TODO list"
                         visible={this.state.openModal}
                         okLabel={"ADD"}
-                        onOk={this.modalClickOk.bind(this)}
+                        onOk={this.modalClickAdd.bind(this)}
                         onCancel={this.modalClickCancel.bind(this)}>
                     <View>
                         <TextField
                             label='Title'
+                            value={cardTitle}
+                            onChangeText={ (cardTitle) => this.setState({cardTitle})}
                         />
                         <TextField
                             label='Content'
                             multiline={true}
+                            value={cardContent}
+                            onChangeText={ (cardContent) => this.setState({cardContent})}
                         />
                     </View>
                     </MaterialDialog>;
         }
 
-        for(let i = 0; i < this.state.numberOfCards; i++){
-            cards.push(
-                <Card key={i} style={styles.card}>
+        for(let i = 0; i < this.state.cards.length ; i++){
+            cardsToShow.push(
+                <Card key={i} number={i} style={styles.card}>
                     <CardTitle
-                        title="This is a title"
+                        title={this.state.cards[i].title}
                     />
-                    <CardContent text="Your device will reboot in few seconds once successful, be patient meanwhile" />
+                    <CardContent text={this.state.cards[i].content} />
                     <CardAction
                         separator={true}
                         inColumn={false}>
                         <CardButton
                             onPress={() => {}}
                             title="Edit"
-                            color="blue"
+                            color="#3949ab"
                         />
                         <CardButton
-                            onPress={() => {}}
+                            onPress={this.deleteCard.bind(this, this.state.cards[i].id)}
                             title="Delete"
                             color="red"
                         />
@@ -84,7 +107,7 @@ export default class Dashboard extends React.Component {
 
         return (
             <View style={styles.container}>
-                {cards}
+                {cardsToShow}
                 {modal}
                 <ActionButton onPress={this.addNewCard.bind(this)}/>
             </View>

@@ -14,9 +14,11 @@ export default class Login extends React.Component {
             <View style={styles.container}>
                 <Text style={styles.text}>Please login</Text>
                 <TextField
+                    style={styles.textField}
                     label='Username'
                 />
                 <TextField
+                    style={styles.textField}
                     label='Password'
                     secureTextEntry={true}
                 />
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         justifyContent: 'center',
-        paddingBottom: 200
+        paddingBottom: 200,
     },
     text: {
         fontSize: 24,
@@ -45,9 +47,13 @@ const styles = StyleSheet.create({
         marginRight: 'auto',
     },
     loginButton: {
-        width: '50%',
+        width: '30%',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 50
+    },
+    textField: {
+        marginLeft: 20,
+        marginRight: 20
     }
 });
