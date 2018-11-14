@@ -67,7 +67,8 @@ export default class Dashboard extends React.Component {
                         visible={this.state.openModal}
                         okLabel={"ADD"}
                         onOk={this.modalClickAdd.bind(this)}
-                        onCancel={this.modalClickCancel.bind(this)}>
+                        onCancel={this.modalClickCancel.bind(this)}
+                        colorAccent={'#3949ab'}>
                     <View>
                         <TextField
                             label='Title'
@@ -90,7 +91,7 @@ export default class Dashboard extends React.Component {
                     <CardTitle
                         title={this.state.cards[i].title}
                     />
-                    <CardContent text={this.state.cards[i].content} />
+                    <CardContent text={this.state.cards[i].content} style={styles.cardContent} />
                     <CardAction
                         separator={true}
                         inColumn={false}>
@@ -126,6 +127,9 @@ export default class Dashboard extends React.Component {
 const styles = StyleSheet.create({
     card: {
         flex: 0.1
+    },
+    cardContent: {
+        overflow: 'hidden',
     },
     plusButton: {
         position: 'absolute',
