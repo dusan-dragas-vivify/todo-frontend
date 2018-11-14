@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { ActionButton, Card } from 'react-native-material-ui';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { ActionButton } from 'react-native-material-ui';
 import { MaterialDialog } from 'react-native-material-dialog';
 import { TextField } from 'react-native-material-textfield';
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 
 export default class Dashboard extends React.Component {
 
@@ -17,9 +18,19 @@ export default class Dashboard extends React.Component {
 
     addNewCard = () => {
         this.setState({
-            numberOfCards: this.state.numberOfCards + 1,
             openModal: true
         })
+    };
+
+    modalClickOk = () => {
+        this.setState({
+            openModal: false,
+            numberOfCards: this.state.numberOfCards + 1
+        });
+    };
+
+    modalClickCancel = () => {
+        this.setState({ openModal: false });
     };
 
     render() {
@@ -32,8 +43,8 @@ export default class Dashboard extends React.Component {
                         title="Add new stuff on TODO list"
                         visible={this.state.openModal}
                         okLabel={"ADD"}
-                        onOk={() => this.setState({ openModal: false })}
-                        onCancel={() => this.setState({ openModal: false })}>
+                        onOk={this.modalClickOk.bind(this)}
+                        onCancel={this.modalClickCancel.bind(this)}>
                     <View>
                         <TextField
                             label='Title'
@@ -48,14 +59,32 @@ export default class Dashboard extends React.Component {
 
         for(let i = 0; i < this.state.numberOfCards; i++){
             cards.push(
-                <Card style={styles.card} key={i}>
-                    <Text>Hello world!</Text>
+                <Card key={i} style={styles.card}>
+                    <CardTitle
+                        title="This is a title"
+                    />
+                    <CardContent text="Your device will reboot in few seconds once successful, be patient meanwhile" />
+                    <CardAction
+                        separator={true}
+                        inColumn={false}>
+                        <CardButton
+                            onPress={() => {}}
+                            title="Edit"
+                            color="blue"
+                        />
+                        <CardButton
+                            onPress={() => {}}
+                            title="Delete"
+                            color="red"
+                        />
+                    </CardAction>
                 </Card>
             )
         }
 
         return (
             <View style={styles.container}>
+                {cards}
                 {modal}
                 <ActionButton onPress={this.addNewCard.bind(this)}/>
             </View>
@@ -65,8 +94,9 @@ export default class Dashboard extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     card: {
+        flex: 0.4
     }
 });

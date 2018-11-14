@@ -21,6 +21,7 @@ export default class Login extends React.Component {
                     secureTextEntry={true}
                 />
                 <RaisedTextButton
+                    style={styles.loginButton}
                     title='Login'
                     titleColor={'#fff'}
                     color='#3949ab'
@@ -42,6 +43,11 @@ const styles = StyleSheet.create({
         fontSize: 24,
         marginLeft: 'auto',
         marginRight: 'auto',
+    },
+    loginButton: {
+        width: '50%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: 50
     }
-
 });
