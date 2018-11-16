@@ -53,6 +53,10 @@ export default class Dashboard extends React.Component {
         this.props.navigation.navigate('Edit', { id: id });
     };
 
+    static logout = () => {
+        alert("logged out!")
+    };
+
     render() {
 
         const cardsToShow = [];

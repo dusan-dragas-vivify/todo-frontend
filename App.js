@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import Dashboard from "./App/Components/Dashboard";
 import Login from "./App/Components/Login";
@@ -15,7 +16,9 @@ const RootStack = createStackNavigator(
         Dashboard: {
             screen: Dashboard,
             navigationOptions: () => ({
-                title: 'Dashboard'
+                title: 'Dashboard',
+                headerLeft: null,
+                headerRight: <Button onPress={Dashboard.logout} title={'Logout'}></Button>
             }),
         },
         Edit: {
@@ -36,12 +39,19 @@ export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            jwt_token: '',
             isLoading: false,
             error: false
         };
     }
 
-  render() {
+    newJWT = (jwt) => {
+        this.setState({
+            jwt_token: jwt
+        });
+    };
+
+    render() {
     return (
       <RootStack/>
     );
