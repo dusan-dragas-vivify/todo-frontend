@@ -1,11 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import {StyleSheet, Text, View, ScrollView, AsyncStorage, Button} from 'react-native';
 import { ActionButton } from 'react-native-material-ui';
 import { MaterialDialog } from 'react-native-material-dialog';
 import { TextField } from 'react-native-material-textfield';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
+import axios from "axios";
 
 export default class Dashboard extends React.Component {
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Dashboard',
+            headerLeft: null,
+            headerRight: <Button onPress={() => { Dashboard.logout(navigation) } } title={'Logout'}></Button>
+        }
+    };
 
     constructor(props) {
         super(props);
@@ -53,8 +62,32 @@ export default class Dashboard extends React.Component {
         this.props.navigation.navigate('Edit', { id: id });
     };
 
-    static logout = () => {
-        alert("logged out!")
+    static logout = (navigation) => {
+
+        AsyncStorage.getItem("jwt_token", (error, result) => {
+            if(!error) {
+                const jwt = result;
+
+                axios.get(`http://todo-api.test/api/logout`, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                }).then((response) => {
+                    if(response.status == 200) {
+
+                        AsyncStorage.removeItem('jwt_token');
+                        navigation.navigate('Login');
+
+                    }
+                    console.log(response);
+                }).catch((error) => {
+                    if(error.response){
+                        console.log(error.response);
+                    }
+                });
+
+            }else{
+                console.log(error);
+            }
+        });
     };
 
     render() {
@@ -62,8 +95,8 @@ export default class Dashboard extends React.Component {
         const cardsToShow = [];
         let modal;
 
-        let {cardTitle} = '';
-        let {cardContent} = '';
+        let {cardTitle} = this.state.cardTitle;
+        let {cardContent} = this.state.cardContent;
 
         if(this.state.openModal) {
             modal = <MaterialDialog

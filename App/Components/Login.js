@@ -19,38 +19,15 @@ export default class Login extends React.Component {
 
     loginRequest = () => {
 
-        // fetch('http://todo-api.test/api/login', {
-        //     method: 'POST',
-        //     headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         username: this.state.username,
-        //         password: this.state.password
-        //     })
-        // }).then((response) => response.json())
-        //     .then((responseJson) => {
-        //     if(responseJson.error) {
-        //         this.setState({ errorMessage: responseJson.error });
-        //     }else{
-        //         this.setState({ errorMessage: '' });
-        //         DeviceStorage.saveItem("jwt_token", responseJson.token);
-        //         this.props.navigation.navigate('Dashboard');
-        //     }
-        // }).catch((error) => {
-        //     if(error.response){
-        //         this.setState({ errorMessage: error.response.data.error })
-        //     }
-        // });
-
         axios.post(`http://todo-api.test/api/login`, {
             username: this.state.username,
             password: this.state.password
         }).then((response) => {
             if(response.status == 200) {
                 this.setState({
-                    errorMessage: ''
+                    errorMessage: '',
+                    username: '',
+                    password: ''
                 });
                 DeviceStorage.saveItem("jwt_token", response.data.token);
                 this.props.navigation.navigate('Dashboard');
@@ -73,6 +50,7 @@ export default class Login extends React.Component {
                     style={styles.textField}
                     label='Username'
                     autoCapitalize={'none'}
+                    value={this.state.username}
                     onFocus = { () => this.setState({ errorMessage: '' })}
                     onChangeText={ (username) => this.setState({username})}
                 />
@@ -81,6 +59,7 @@ export default class Login extends React.Component {
                     label='Password'
                     secureTextEntry={true}
                     autoCapitalize={'none'}
+                    value={this.state.password}
                     onFocus = { () => this.setState({ errorMessage: '' })}
                     onChangeText={ (password) => this.setState({password})}
                 />

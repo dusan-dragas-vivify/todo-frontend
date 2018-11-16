@@ -22,4 +22,12 @@ export default class deviceStorage{
         }
     }
 
+    static async removeItem(key) {
+        try{
+            await AsyncStorage.removeItem(key);
+        }catch (error) {
+            console.log('AsyncStorage Error: ' + error.message);
+        }
+    }
+
 };

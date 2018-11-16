@@ -5,7 +5,7 @@ import Dashboard from "./App/Components/Dashboard";
 import Login from "./App/Components/Login";
 import Edit from "./App/Components/Edit";
 
-const RootStack = createStackNavigator(
+const RootStack = createStackNavigator (
     {
         Login: {
             screen: Login,
@@ -14,12 +14,7 @@ const RootStack = createStackNavigator(
             }),
         },
         Dashboard: {
-            screen: Dashboard,
-            navigationOptions: () => ({
-                title: 'Dashboard',
-                headerLeft: null,
-                headerRight: <Button onPress={Dashboard.logout} title={'Logout'}></Button>
-            }),
+            screen: Dashboard
         },
         Edit: {
             screen: Edit,
@@ -32,24 +27,17 @@ const RootStack = createStackNavigator(
     {
         initialRouteName: 'Login',
     }
-    );
+);
 
 export default class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            jwt_token: '',
             isLoading: false,
             error: false
         };
     }
-
-    newJWT = (jwt) => {
-        this.setState({
-            jwt_token: jwt
-        });
-    };
 
     render() {
     return (
