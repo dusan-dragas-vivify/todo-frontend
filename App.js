@@ -1,10 +1,11 @@
 import React from 'react';
+import { Button } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import Dashboard from "./App/Components/Dashboard";
 import Login from "./App/Components/Login";
 import Edit from "./App/Components/Edit";
 
-const RootStack = createStackNavigator(
+const RootStack = createStackNavigator (
     {
         Login: {
             screen: Login,
@@ -13,10 +14,7 @@ const RootStack = createStackNavigator(
             }),
         },
         Dashboard: {
-            screen: Dashboard,
-            navigationOptions: () => ({
-                title: 'Dashboard'
-            }),
+            screen: Dashboard
         },
         Edit: {
             screen: Edit,
@@ -29,7 +27,7 @@ const RootStack = createStackNavigator(
     {
         initialRouteName: 'Login',
     }
-    );
+);
 
 export default class App extends React.Component {
 
@@ -41,7 +39,7 @@ export default class App extends React.Component {
         };
     }
 
-  render() {
+    render() {
     return (
       <RootStack/>
     );
