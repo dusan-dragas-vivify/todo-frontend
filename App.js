@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
-import Dashboard from "./App/Components/Dashboard";
-import Login from "./App/Components/Login";
-import Edit from "./App/Components/Edit";
+import Dashboard from "./App/Screens/Dashboard";
+import Login from "./App/Screens/Login";
+import Edit from "./App/Screens/Edit";
 
 const RootStack = createStackNavigator (
     {
