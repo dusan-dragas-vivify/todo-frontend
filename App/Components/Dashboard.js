@@ -307,12 +307,10 @@ const styles = StyleSheet.create({
     cardButtonPriority: {
         borderColor: '#E50000',
         backgroundColor: '#fff',
-        color: '#E50000'
     },
     cardButtonPrioritySelected: {
         borderColor: '#E50000',
         backgroundColor: '#E50000',
-        color: '#fff'
     },
     cardContent: {
         overflow: 'hidden',
