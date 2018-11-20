@@ -20,13 +20,40 @@ export default class Dashboard extends React.Component {
         super(props);
 
         this.state = {
-            numberOfCards: 0,
             cards: [],
             openModal: false,
             cardTitle: '',
             cardContent: ''
         }
     }
+    componentDidMount() {
+        this.getCards();
+    }
+
+    getCards = () => {
+        AsyncStorage.getItem("jwt_token", (error, result) => {
+            if(!error) {
+                const jwt = result;
+                axios.get(`http://todo-api.test/api/tasks`, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                }).then((response) => {
+                    if(response.status == 200) {
+                        this.setState({
+                            cards: response.data,
+                        });
+                    }
+                    console.log(response.data);
+                }).catch((error) => {
+                    if(error.response){
+                        console.log(error.response);
+                    }
+                });
+
+            }else{
+                console.log(error);
+            }
+        });
+    };
 
     addNewCard = () => {
         this.setState({
@@ -35,15 +62,31 @@ export default class Dashboard extends React.Component {
     };
 
     modalClickAdd = () => {
-        this.setState({
-            openModal: false,
-            numberOfCards: this.state.numberOfCards + 1,
-            cards: [...this.state.cards, {
-                id: this.state.numberOfCards + 1,
-                title: this.state.cardTitle,
-                content: this.state.cardContent
-            }]
+        AsyncStorage.getItem("jwt_token", (error, result) => {
+            if(!error) {
+                const jwt = result;
+
+                axios.post(`http://todo-api.test/api/tasks`, {
+                   title: this.state.cardTitle,
+                   content: this.state.cardContent
+                }, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                }).then((response) => {
+                    if(response.status == 201) {
+                        this.getCards();
+                        this.setState({ openModal: false });
+                    }
+                }).catch((error) => {
+                    if(error.response){
+                        console.log(error.response);
+                    }
+                });
+
+            }else{
+                console.log(error);
+            }
         });
+
     };
 
     modalClickCancel = () => {
@@ -51,15 +94,30 @@ export default class Dashboard extends React.Component {
     };
 
     deleteCard = (id) => {
-        let cardToRemove = this.state.cards.findIndex( obj => obj.id === id);
-        let newObj = this.state.cards.splice(cardToRemove, 1);
-        this.setState({
-            numberOfCards: this.state.numberOfCards - 1,
-        })
+        AsyncStorage.getItem("jwt_token", (error, result) => {
+            if(!error) {
+                const jwt = result;
+                axios.delete(`http://todo-api.test/api/tasks/${id}`, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                }).then((response) => {
+                    if(response.status == 200) {
+                        this.getCards();
+                        this.setState({ openModal: false });
+                    }
+                }).catch((error) => {
+                    if(error.response){
+                        console.log(error.response);
+                    }
+                });
+
+            }else{
+                console.log(error);
+            }
+        });
     };
 
     editCard = (id) => {
-        this.props.navigation.navigate('Edit', { id: id });
+        this.props.navigation.navigate('Edit', { id: id, getCards: () => {this.getCards()} });
     };
 
     static logout = (navigation) => {
@@ -67,7 +125,6 @@ export default class Dashboard extends React.Component {
         AsyncStorage.getItem("jwt_token", (error, result) => {
             if(!error) {
                 const jwt = result;
-
                 axios.get(`http://todo-api.test/api/logout`, {
                     headers: { Authorization: `Bearer ${jwt}` },
                 }).then((response) => {
@@ -88,6 +145,39 @@ export default class Dashboard extends React.Component {
                 console.log(error);
             }
         });
+    };
+
+    toggleDone = (card) => {
+        const isDone = () => {
+            if(card.is_done){
+                return false;
+            }else if(!card.is_done){
+                return true;
+            }
+        };
+        AsyncStorage.getItem("jwt_token", (error, result) => {
+            if(!error) {
+                const jwt = result;
+                axios.patch(`http://todo-api.test/api/tasks/${card.id}`,{
+                    'is_done': isDone()
+                }, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                }).then((response) => {
+                    this.getCards();
+                }).catch((error) => {
+                    if(error.response){
+                        console.log(error.response);
+                    }
+                });
+
+            }else{
+                console.log(error);
+            }
+        });
+    };
+
+    togglePriority = (card) => {
+
     };
 
     render() {
@@ -124,7 +214,7 @@ export default class Dashboard extends React.Component {
 
         for(let i = 0; i < this.state.cards.length ; i++){
             cardsToShow.push(
-                <Card key={i} number={i} style={styles.card}>
+                <Card key={this.state.cards[i].id} number={this.state.cards[i].id} style={[this.state.cards[i].is_done ? styles.cardDone : styles.card]}>
                     <CardTitle
                         title={this.state.cards[i].title}
                     />
@@ -133,14 +223,43 @@ export default class Dashboard extends React.Component {
                         separator={true}
                         inColumn={false}>
                         <CardButton
-                            onPress={this.editCard.bind(this, this.state.cards[i].id)}
+                            onPress={() => {this.editCard(this.state.cards[i].id)}}
                             title="Edit"
                             color="#3949ab"
                         />
                         <CardButton
-                            onPress={this.deleteCard.bind(this, this.state.cards[i].id)}
+                            onPress={() => {this.deleteCard(this.state.cards[i].id)}}
                             title="Delete"
                             color="red"
+                        />
+                        <CardButton
+                            onPress={() => {this.toggleDone(this.state.cards[i])}}
+                            title="Done"
+                            color="green"
+                        />
+                        <CardButton
+                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            title="none"
+                            color="white"
+                            style = {styles.cardButtonPriority}
+                        />
+                        <CardButton
+                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            title="!"
+                            color="white"
+                            style = {styles.cardButtonPriority}
+                        />
+                        <CardButton
+                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            title="!!"
+                            color="white"
+                            style = {styles.cardButtonPriority}
+                        />
+                        <CardButton
+                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            title="!!!"
+                            color="white"
+                            style = {styles.cardButtonPriority}
                         />
                     </CardAction>
                 </Card>
@@ -153,9 +272,9 @@ export default class Dashboard extends React.Component {
                 flexDirection: 'column',
                 justifyContent: 'flex-start'
             }}>
-                {cardsToShow}
+                {cardsToShow.reverse()}
                 {modal}
-                <ActionButton style={styles.plusButton} onPress={this.addNewCard.bind(this)}/>
+                <ActionButton style={styles.plusButton} onPress={() => {this.addNewCard()}}/>
             </ScrollView>
         );
     }
@@ -164,6 +283,16 @@ export default class Dashboard extends React.Component {
 const styles = StyleSheet.create({
     card: {
         flex: 0.1
+    },
+    cardDone: {
+        flex: 0.1,
+        backgroundColor: '#989898',
+        opacity: 0.7
+    },
+    cardButtonPriority: {
+        borderColor: '#E50000',
+        backgroundColor: '#E50000',
+        opacity: 0.5
     },
     cardContent: {
         overflow: 'hidden',
