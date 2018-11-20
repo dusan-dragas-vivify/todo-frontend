@@ -41,8 +41,8 @@ export default class Dashboard extends React.Component {
                         this.setState({
                             cards: response.data,
                         });
+                        console.log(this.state.cards);
                     }
-                    console.log(response.data);
                 }).catch((error) => {
                     if(error.response){
                         console.log(error.response);
@@ -121,7 +121,6 @@ export default class Dashboard extends React.Component {
     };
 
     static logout = (navigation) => {
-
         AsyncStorage.getItem("jwt_token", (error, result) => {
             if(!error) {
                 const jwt = result;
@@ -169,15 +168,31 @@ export default class Dashboard extends React.Component {
                         console.log(error.response);
                     }
                 });
-
             }else{
                 console.log(error);
             }
         });
     };
 
-    togglePriority = (card) => {
-
+    togglePriority = (card, priorityLevel) => {
+        AsyncStorage.getItem("jwt_token", (error, result) => {
+            if(!error) {
+                const jwt = result;
+                axios.patch(`http://todo-api.test/api/tasks/${card.id}`,{
+                    'priority': priorityLevel
+                }, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                }).then((response) => {
+                    this.getCards();
+                }).catch((error) => {
+                    if(error.response){
+                        console.log(error.response);
+                    }
+                });
+            }else{
+                console.log(error);
+            }
+        });
     };
 
     render() {
@@ -238,28 +253,28 @@ export default class Dashboard extends React.Component {
                             color="green"
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            onPress={() => {this.togglePriority(this.state.cards[i], 0)}}
                             title="none"
-                            color="white"
-                            style = {styles.cardButtonPriority}
+                            color={[this.state.cards[i].priority === 0 ? '#fff' : '#E50000']}
+                            style = {[this.state.cards[i].priority === 0 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            onPress={() => {this.togglePriority(this.state.cards[i], 1)}}
                             title="!"
-                            color="white"
-                            style = {styles.cardButtonPriority}
+                            color={[this.state.cards[i].priority === 1 ? '#fff' : '#E50000']}
+                            style = {[this.state.cards[i].priority === 1 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            onPress={() => {this.togglePriority(this.state.cards[i], 2)}}
                             title="!!"
-                            color="white"
-                            style = {styles.cardButtonPriority}
+                            color={[this.state.cards[i].priority === 2 ? '#fff' : '#E50000']}
+                            style = {[this.state.cards[i].priority === 2 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i])}}
+                            onPress={() => {this.togglePriority(this.state.cards[i], 3)}}
                             title="!!!"
-                            color="white"
-                            style = {styles.cardButtonPriority}
+                            color={[this.state.cards[i].priority === 3 ? '#fff' : '#E50000']}
+                            style = {[this.state.cards[i].priority === 3 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
                         />
                     </CardAction>
                 </Card>
@@ -291,8 +306,13 @@ const styles = StyleSheet.create({
     },
     cardButtonPriority: {
         borderColor: '#E50000',
+        backgroundColor: '#fff',
+        color: '#E50000'
+    },
+    cardButtonPrioritySelected: {
+        borderColor: '#E50000',
         backgroundColor: '#E50000',
-        opacity: 0.5
+        color: '#fff'
     },
     cardContent: {
         overflow: 'hidden',

@@ -32,7 +32,6 @@ export default class Login extends React.Component {
                 DeviceStorage.saveItem("jwt_token", response.data.token);
                 this.props.navigation.navigate('Dashboard');
             }
-                console.log(response);
         }).catch((error) => {
             if(error.response){
                 this.setState({
@@ -69,7 +68,7 @@ export default class Login extends React.Component {
                     title='Login'
                     titleColor={'#fff'}
                     color='#3949ab'
-                    onPress={this.loginRequest.bind(this)}
+                    onPress={() => {this.loginRequest()}}
                 />
             </View>
         );
