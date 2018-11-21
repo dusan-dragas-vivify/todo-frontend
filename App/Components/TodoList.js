@@ -3,11 +3,11 @@ import ListItem from "./ListItem";
 
 export default class TodoList extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
-    render(){
+    render() {
 
         let todoList = [];
 
@@ -24,7 +24,7 @@ export default class TodoList extends React.Component {
             />
         });
 
-        return(
+        return (
             todoList
         )
     }

@@ -6,8 +6,6 @@ import Dashboard from "./App/Screens/Dashboard";
 import Login from "./App/Screens/Login";
 import Edit from "./App/Screens/Edit";
 import { dashboard } from "./App/Screens/Dashboard";
-import {deviceStorage} from "./src/services/DeviceStorage";
-import {apiService} from "./src/services/ApiService";
 
 const RootStack = createStackNavigator (
     {

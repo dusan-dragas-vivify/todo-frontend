@@ -8,14 +8,14 @@ import CardButton from "react-native-material-cards/CardButton";
 
 export default class ListItem extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <Card
-                  style={[this.props.cards[this.props.i].is_done ? styles.cardDone : styles.card]}>
+                style={[this.props.cards[this.props.i].is_done ? styles.cardDone : styles.card]}>
                 <CardTitle
                     title={this.props.cards[this.props.i].title}
                 />

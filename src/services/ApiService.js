@@ -5,7 +5,7 @@ import {deviceStorage} from "./DeviceStorage";
 
 export default class ApiService {
 
-    constructor(props){
+    constructor(props) {
         //axios.defaults.baseURL = 'http://todo-api.test/api';
     }
 
@@ -75,23 +75,8 @@ export default class ApiService {
         return axios.post(`http://todo-api.test/api/login`, {
             username: username,
             password: password
-        }).then((response) => {
-            if(response.status == 200) {
-                this.setState({
-                    errorMessage: '',
-                    username: '',
-                    password: ''
-                });
-                deviceStorage.saveItem("jwt_token", response.data.token);
-                this.props.navigation.navigate('Dashboard');
-            }
-        }).catch((error) => {
-            if(error.response){
-                this.setState({
-                    errorMessage: error.response.data.error
-                })
-            }
-        });
+        }).then((response) => response)
+            .catch((error) => error.response);
     };
 
     logout = (jwt) => {

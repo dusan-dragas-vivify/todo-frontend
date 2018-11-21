@@ -5,16 +5,16 @@ import {deviceStorage} from "../../src/services/DeviceStorage";
 
 export default class Splash extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
     componentDidMount() {
         deviceStorage.getItem('jwt_token').then((jwt) => {
             apiService.getUser(jwt).then((response) => {
-                if(response.status === 200){
+                if (response.status === 200) {
                     this.props.navigation.navigate('Dashboard');
-                }else{
+                } else {
                     this.props.navigation.navigate('Login');
                 }
             }).catch((error) => {

@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
-import { TextField } from 'react-native-material-textfield';
-import { RaisedTextButton } from 'react-native-material-buttons';
+import {StyleSheet, Text, View} from 'react-native';
+import {TextField} from 'react-native-material-textfield';
+import {RaisedTextButton} from 'react-native-material-buttons';
 import axios from 'axios';
-import { deviceStorage } from "../../src/services/DeviceStorage";
+import {deviceStorage} from "../../src/services/DeviceStorage";
+import {apiService} from "../../src/services/ApiService";
 
 export default class Login extends React.Component {
 
@@ -18,12 +19,8 @@ export default class Login extends React.Component {
     }
 
     loginRequest = () => {
-
-        axios.post(`http://todo-api.test/api/login`, {
-            username: this.state.username,
-            password: this.state.password
-        }).then((response) => {
-            if(response.status == 200) {
+        apiService.login(this.state.username, this.state.password).then((response) => {
+            if (response.status === 200) {
                 this.setState({
                     errorMessage: '',
                     username: '',
@@ -31,9 +28,19 @@ export default class Login extends React.Component {
                 });
                 deviceStorage.saveItem("jwt_token", response.data.token);
                 this.props.navigation.navigate('Dashboard');
+            } else {
+                if (response.data.error) {
+                    this.setState({
+                        errorMessage: response.data.error
+                    })
+                } else {
+                    this.setState({
+                        errorMessage: `Status ${response.status}`
+                    })
+                }
             }
         }).catch((error) => {
-            if(error.response){
+            if (error.response) {
                 this.setState({
                     errorMessage: error.response.data.error
                 })
@@ -50,8 +57,8 @@ export default class Login extends React.Component {
                     label='Username'
                     autoCapitalize={'none'}
                     value={this.state.username}
-                    onFocus = { () => this.setState({ errorMessage: '' })}
-                    onChangeText={ (username) => this.setState({username})}
+                    onFocus={() => this.setState({errorMessage: ''})}
+                    onChangeText={(username) => this.setState({username})}
                 />
                 <TextField
                     style={styles.textField}
@@ -59,8 +66,8 @@ export default class Login extends React.Component {
                     secureTextEntry={true}
                     autoCapitalize={'none'}
                     value={this.state.password}
-                    onFocus = { () => this.setState({ errorMessage: '' })}
-                    onChangeText={ (password) => this.setState({password})}
+                    onFocus={() => this.setState({errorMessage: ''})}
+                    onChangeText={(password) => this.setState({password})}
                 />
                 <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
                 <RaisedTextButton
@@ -68,7 +75,9 @@ export default class Login extends React.Component {
                     title='Login'
                     titleColor={'#fff'}
                     color='#3949ab'
-                    onPress={() => {this.loginRequest()}}
+                    onPress={() => {
+                        this.loginRequest()
+                    }}
                 />
             </View>
         );
