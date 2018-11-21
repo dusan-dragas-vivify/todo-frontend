@@ -64,15 +64,6 @@ export default class Dashboard extends React.Component {
         });
     };
 
-    logout = (navigation) => {
-        apiService.logout(this.state.jwt).then((response) => {
-            deviceStorage.removeItem('jwt_token').then(() => {
-                this.setState({jwt: ''});
-                navigation.navigate('Login');
-            });
-        });
-    };
-
     toggleDone = (card) => {
         apiService.toggleDone(this.state.jwt, card).then(() => {
             apiService.getCards(this.state.jwt).then((response) => {
@@ -132,8 +123,6 @@ export default class Dashboard extends React.Component {
         );
     }
 }
-
-export const dashboard = new Dashboard();
 
 const styles = StyleSheet.create({
     plusButton: {
