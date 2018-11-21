@@ -1,10 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, ScrollView, AsyncStorage, Button} from 'react-native';
 import {ActionButton} from 'react-native-material-ui';
-import {MaterialDialog} from 'react-native-material-dialog';
-import {TextField} from 'react-native-material-textfield';
-import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'react-native-material-cards'
-import axios from "axios";
 import {apiService} from "../../src/services/ApiService";
 import {deviceStorage} from "../../src/services/DeviceStorage";
 import MyModal from "../Components/MyModal";
@@ -51,9 +47,9 @@ export default class Dashboard extends React.Component {
         this.setState({openModal: false})
     };
 
-    onDeleteEvent = (jwt, id) => {
-        apiService.deleteCard(jwt, id).then(() => {
-            apiService.getCards(jwt).then((response) => {
+    onDeleteEvent = (id) => {
+        apiService.deleteCard(this.state.jwt, id).then(() => {
+            apiService.getCards(this.state.jwt).then((response) => {
                 this.setState({
                     cards: response
                 });
@@ -61,10 +57,10 @@ export default class Dashboard extends React.Component {
         })
     };
 
-    onEditEvent = (jwt, id) => {
+    onEditEvent = (id) => {
         this.props.navigation.navigate('Edit', {
             id: id,
-            jwt: jwt
+            jwt: this.state.jwt
         });
     };
 
@@ -115,6 +111,10 @@ export default class Dashboard extends React.Component {
             }}>
                 <TodoList
                     cards={this.state.cards}
+                    onEditEvent={this.onEditEvent}
+                    onDeleteEvent={this.onDeleteEvent}
+                    toggleDone={this.toggleDone}
+                    togglePriority={this.togglePriority}
                 />
                 <MyModal
                     visible={this.state.openModal}

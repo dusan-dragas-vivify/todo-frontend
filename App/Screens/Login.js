@@ -17,15 +17,6 @@ export default class Login extends React.Component {
         }
     }
 
-    // Questionable solution...
-    componentDidMount() {
-        deviceStorage.getItem('jwt_token').then((jwt) => {
-            if(jwt){
-                this.props.navigation.navigate('Dashboard');
-            }
-        });
-    }
-
     loginRequest = () => {
 
         axios.post(`http://todo-api.test/api/login`, {

@@ -5,6 +5,10 @@ import {deviceStorage} from "./DeviceStorage";
 
 export default class ApiService {
 
+    constructor(props){
+        //axios.defaults.baseURL = 'http://todo-api.test/api';
+    }
+
     getCards = (jwt) => {
         return axios.get(`http://todo-api.test/api/tasks`, {
             headers: {Authorization: `Bearer ${jwt}`},
