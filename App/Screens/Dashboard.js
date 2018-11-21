@@ -7,6 +7,7 @@ import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'r
 import axios from "axios";
 import {apiService} from "../../src/services/ApiService";
 import {deviceStorage} from "../../src/services/DeviceStorage";
+import MyModal from "../Components/MyModal";
 
 export default class Dashboard extends React.Component {
 
@@ -34,7 +35,8 @@ export default class Dashboard extends React.Component {
     }
 
     modalOnOk = () => {
-        apiService.addCard(this.state.jwt, this.state.cardTitle, this.state.cardContent).then(() => {
+        apiService.addCard(this.state.jwt, this.state.cardTitle, this.state.cardContent).then((resp) => {
+            let a = 1;
             apiService.getCards(this.state.jwt).then((response) => {
                 this.setState({
                     cards: response
@@ -42,6 +44,10 @@ export default class Dashboard extends React.Component {
                 this.setState({openModal: false});
             });
         })
+    };
+
+    modalOnCancel = () => {
+        this.setState({openModal: false})
     };
 
     onDeleteEvent = (jwt, id) => {
@@ -64,7 +70,7 @@ export default class Dashboard extends React.Component {
     logout = (navigation) => {
         apiService.logout(this.state.jwt).then((response) => {
             deviceStorage.removeItem('jwt_token').then(() => {
-                this.setState({ jwt: '' });
+                this.setState({jwt: ''});
                 navigation.navigate('Login');
             });
         });
@@ -82,49 +88,21 @@ export default class Dashboard extends React.Component {
 
     togglePriority = (card, priorityLevel) => {
         apiService.togglePriority(this.state.jwt, card, priorityLevel).then(() => {
-           apiService.getCards(this.state.jwt).then((response) => {
-               this.setState({
-                   cards: response
-               });
-           });
+            apiService.getCards(this.state.jwt).then((response) => {
+                this.setState({
+                    cards: response
+                });
+            });
         });
     };
+
+    updateModalTitle = (val) => {this.setState({cardTitle: val})};
+
+    updateModalContent = (val) => {this.setState({cardContent: val})};
 
     render() {
 
         const cardsToShow = [];
-        let modal;
-
-        let {cardTitle} = this.state.cardTitle;
-        let {cardContent} = this.state.cardContent;
-
-        if (this.state.openModal) {
-            modal = <MaterialDialog
-                title="Add new stuff in TODO list"
-                visible={this.state.openModal}
-                okLabel={"ADD"}
-                onOk={() => {
-                    this.modalOnOk()
-                }}
-                onCancel={() => {
-                    this.setState({openModal: false});
-                }}
-                colorAccent={'#3949ab'}>
-                <View>
-                    <TextField
-                        label='Title'
-                        value={cardTitle}
-                        onChangeText={(cardTitle) => this.setState({cardTitle})}
-                    />
-                    <TextField
-                        label='Content'
-                        multiline={true}
-                        value={cardContent}
-                        onChangeText={(cardContent) => this.setState({cardContent})}
-                    />
-                </View>
-            </MaterialDialog>;
-        }
 
         for (let i = 0; i < this.state.cards.length; i++) {
             cardsToShow.push(
@@ -202,10 +180,16 @@ export default class Dashboard extends React.Component {
                 justifyContent: 'flex-start'
             }}>
                 {cardsToShow.reverse()}
-                {modal}
-                <ActionButton style={styles.plusButton} onPress={() => {
-                    this.setState({openModal: true})
-                }}/>
+                <MyModal
+                    visible={this.state.openModal}
+                    cardTitle={this.state.cardTitle}
+                    cardContent={this.state.cardContent}
+                    modalOnOk={this.modalOnOk}
+                    modalOnCancel={this.modalOnCancel}
+                    onChangeModalContent={this.updateModalContent}
+                    onChangeModalTitle={this.updateModalTitle}
+                ></MyModal>
+                <ActionButton style={styles.plusButton} onPress={() => {this.setState({openModal: true}); }}/>
             </ScrollView>
         );
     }
