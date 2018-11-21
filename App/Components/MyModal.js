@@ -5,12 +5,10 @@ import TextField from "react-native-material-textfield/src/components/field";
 
 export default class MyModal extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     render() {
@@ -30,13 +28,13 @@ export default class MyModal extends React.Component {
                     <TextField
                         label='Title'
                         value={cardTitle}
-                        onChangeText={ (value) => this.props.onChangeModalTitle(value)}
+                        onChangeText={(value) => this.props.onChangeModalTitle(value)}
                     />
                     <TextField
                         label='Content'
                         multiline={true}
                         value={cardContent}
-                        onChangeText={ (value) => this.props.onChangeModalContent(value)}
+                        onChangeText={(value) => this.props.onChangeModalContent(value)}
                     />
                 </View>
             </MaterialDialog>

@@ -96,9 +96,13 @@ export default class Dashboard extends React.Component {
         });
     };
 
-    updateModalTitle = (val) => {this.setState({cardTitle: val})};
+    updateModalTitle = (val) => {
+        this.setState({cardTitle: val})
+    };
 
-    updateModalContent = (val) => {this.setState({cardContent: val})};
+    updateModalContent = (val) => {
+        this.setState({cardContent: val})
+    };
 
     render() {
 
@@ -189,7 +193,9 @@ export default class Dashboard extends React.Component {
                     onChangeModalContent={this.updateModalContent}
                     onChangeModalTitle={this.updateModalTitle}
                 ></MyModal>
-                <ActionButton style={styles.plusButton} onPress={() => {this.setState({openModal: true}); }}/>
+                <ActionButton style={styles.plusButton} onPress={() => {
+                    this.setState({openModal: true});
+                }}/>
             </ScrollView>
         );
     }
