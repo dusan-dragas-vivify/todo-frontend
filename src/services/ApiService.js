@@ -6,11 +6,13 @@ import {deviceStorage} from "./DeviceStorage";
 export default class ApiService {
 
     constructor(props) {
-        //axios.defaults.baseURL = 'http://todo-api.test/api';
+        this.axiosInstance = axios.create({
+            baseURL: 'http://todo-api.test/api',
+        });
     }
 
     getCards = (jwt) => {
-        return axios.get(`http://todo-api.test/api/tasks`, {
+        return this.axiosInstance.get(`/tasks`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) => response.data)
             .catch((error) => {
@@ -21,7 +23,7 @@ export default class ApiService {
     };
 
     addCard = (jwt, title, content) => {
-        return axios.post(`http://todo-api.test/api/tasks`, {
+        return this.axiosInstance.post(`/tasks`, {
             title: title,
             content: content
         }, {
@@ -37,7 +39,7 @@ export default class ApiService {
     };
 
     deleteCard = (jwt, id) => {
-        return axios.delete(`http://todo-api.test/api/tasks/${id}`, {
+        return this.axiosInstance.delete(`/tasks/${id}`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) => response.data)
             .catch((error) => {
@@ -48,7 +50,7 @@ export default class ApiService {
     };
 
     toggleDone = (jwt, card) => {
-        return axios.patch(`http://todo-api.test/api/tasks/${card.id}`, {
+        return this.axiosInstance.patch(`/tasks/${card.id}`, {
             'is_done': !card.is_done
         }, {
             headers: {Authorization: `Bearer ${jwt}`},
@@ -60,7 +62,7 @@ export default class ApiService {
     };
 
     togglePriority = (jwt, card, priorityLevel) => {
-        return axios.patch(`http://todo-api.test/api/tasks/${card.id}`, {
+        return this.axiosInstance.patch(`/tasks/${card.id}`, {
             'priority': priorityLevel
         }, {
             headers: {Authorization: `Bearer ${jwt}`},
@@ -72,7 +74,7 @@ export default class ApiService {
     };
 
     login = (username, password) => {
-        return axios.post(`http://todo-api.test/api/login`, {
+        return this.axiosInstance.post(`/login`, {
             username: username,
             password: password
         }).then((response) => response)
@@ -80,7 +82,7 @@ export default class ApiService {
     };
 
     logout = (jwt) => {
-        return axios.get(`http://todo-api.test/api/logout`, {
+        return this.axiosInstance.get(`/logout`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) => {
             response.data
@@ -92,7 +94,7 @@ export default class ApiService {
     };
 
     getUser = (jwt) => {
-        return axios.get(`http://todo-api.test/api/user`, {
+        return this.axiosInstance.get(`/user`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) =>
             response
