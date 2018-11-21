@@ -47,6 +47,53 @@ export default class ApiService {
             });
     };
 
+    toggleDone = (jwt, card) => {
+        return axios.patch(`http://todo-api.test/api/tasks/${card.id}`, {
+            'is_done': !card.is_done
+        }, {
+            headers: {Authorization: `Bearer ${jwt}`},
+        }).then((response) => response.data).catch((error) => {
+            if (error.response) {
+                console.log(error.response);
+            }
+        });
+    };
+
+    togglePriority = (jwt, card, priorityLevel) => {
+        return axios.patch(`http://todo-api.test/api/tasks/${card.id}`, {
+            'priority': priorityLevel
+        }, {
+            headers: {Authorization: `Bearer ${jwt}`},
+        }).then((response) => response.data).catch((error) => {
+            if (error.response) {
+                console.log(error.response);
+            }
+        });
+    };
+
+    login = (username, password) => {
+        return axios.post(`http://todo-api.test/api/login`, {
+            username: username,
+            password: password
+        }).then((response) => {
+            if(response.status == 200) {
+                this.setState({
+                    errorMessage: '',
+                    username: '',
+                    password: ''
+                });
+                deviceStorage.saveItem("jwt_token", response.data.token);
+                this.props.navigation.navigate('Dashboard');
+            }
+        }).catch((error) => {
+            if(error.response){
+                this.setState({
+                    errorMessage: error.response.data.error
+                })
+            }
+        });
+    };
+
     logout = (jwt) => {
         return axios.get(`http://todo-api.test/api/logout`, {
             headers: {Authorization: `Bearer ${jwt}`},
@@ -59,24 +106,13 @@ export default class ApiService {
         });
     };
 
-    toggleDone = (jwt, card) => {
-        return axios.patch(`http://todo-api.test/api/tasks/${card.id}`, {
-            'is_done': !card.is_done
-        }, {
+    getUser = (jwt) => {
+        return axios.get(`http://todo-api.test/api/user`, {
             headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response.data).catch((error) => {
-            if (error.response) {
-                console.log(error.response);
-            }
-        });
-    }
-
-    togglePriority = (jwt, card, priorityLevel) => {
-        return axios.patch(`http://todo-api.test/api/tasks/${card.id}`, {
-            'priority': priorityLevel
-        }, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response.data).catch((error) => {
+        }).then((response) =>
+            response
+        ).catch((error) => {
+            console.log(error);
             if (error.response) {
                 console.log(error.response);
             }

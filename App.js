@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
+import Splash from "./App/Screens/Splash";
 import Dashboard from "./App/Screens/Dashboard";
 import Login from "./App/Screens/Login";
 import Edit from "./App/Screens/Edit";
@@ -10,6 +11,9 @@ import {apiService} from "./src/services/ApiService";
 
 const RootStack = createStackNavigator (
     {
+        Splash: {
+          screen: Splash
+        },
         Login: {
             screen: Login,
             navigationOptions: () => ({
@@ -33,7 +37,7 @@ const RootStack = createStackNavigator (
         }
     },
     {
-        initialRouteName: 'Login',
+        initialRouteName: 'Splash',
     }
 );
 
