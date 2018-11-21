@@ -4,6 +4,9 @@ import { createStackNavigator } from 'react-navigation';
 import Dashboard from "./App/Screens/Dashboard";
 import Login from "./App/Screens/Login";
 import Edit from "./App/Screens/Edit";
+import { dashboard } from "./App/Screens/Dashboard";
+import {deviceStorage} from "./src/services/DeviceStorage";
+import {apiService} from "./src/services/ApiService";
 
 const RootStack = createStackNavigator (
     {
@@ -14,7 +17,12 @@ const RootStack = createStackNavigator (
             }),
         },
         Dashboard: {
-            screen: Dashboard
+            screen: Dashboard,
+            navigationOptions: (props) => ({
+                title: 'Dashboard',
+                headerLeft: null,
+                headerRight: <Button onPress={() => {dashboard.logout(props.navigation)}} title={'Logout'}></Button>
+            }),
         },
         Edit: {
             screen: Edit,

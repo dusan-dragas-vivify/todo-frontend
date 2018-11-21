@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, ScrollView, AsyncStorage} from 'react-native';
 import { TextField } from 'react-native-material-textfield';
 import { RaisedTextButton } from 'react-native-material-buttons';
 import axios from "axios";
+import {apiService} from "../../src/services/ApiService";
 
 export default class Edit extends React.Component {
 
@@ -22,7 +23,7 @@ export default class Edit extends React.Component {
 
     componentWillUnmount() {
         const {params} = this.props.navigation.state;
-        params.getCards();
+        apiService.getCards(params.jwt);
     }
 
     getCard = (id) => {

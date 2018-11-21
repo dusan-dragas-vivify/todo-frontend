@@ -3,7 +3,7 @@ import { StyleSheet, Text, View} from 'react-native';
 import { TextField } from 'react-native-material-textfield';
 import { RaisedTextButton } from 'react-native-material-buttons';
 import axios from 'axios';
-import DeviceStorage from '../../src/services/DeviceStorage';
+import { deviceStorage } from "../../src/services/DeviceStorage";
 
 export default class Login extends React.Component {
 
@@ -15,6 +15,15 @@ export default class Login extends React.Component {
             password: '',
             errorMessage: ''
         }
+    }
+
+    // Questionable solution...
+    componentDidMount() {
+        deviceStorage.getItem('jwt_token').then((jwt) => {
+            if(jwt){
+                this.props.navigation.navigate('Dashboard');
+            }
+        });
     }
 
     loginRequest = () => {
@@ -29,7 +38,7 @@ export default class Login extends React.Component {
                     username: '',
                     password: ''
                 });
-                DeviceStorage.saveItem("jwt_token", response.data.token);
+                deviceStorage.saveItem("jwt_token", response.data.token);
                 this.props.navigation.navigate('Dashboard');
             }
         }).catch((error) => {

@@ -1,197 +1,92 @@
 import React from 'react';
 import {StyleSheet, Text, View, ScrollView, AsyncStorage, Button} from 'react-native';
-import { ActionButton } from 'react-native-material-ui';
-import { MaterialDialog } from 'react-native-material-dialog';
-import { TextField } from 'react-native-material-textfield';
-import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
+import {ActionButton} from 'react-native-material-ui';
+import {MaterialDialog} from 'react-native-material-dialog';
+import {TextField} from 'react-native-material-textfield';
+import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'react-native-material-cards'
 import axios from "axios";
+import {apiService} from "../../src/services/ApiService";
+import {deviceStorage} from "../../src/services/DeviceStorage";
 
 export default class Dashboard extends React.Component {
-
-    static navigationOptions = ({navigation}) => {
-        return {
-            title: 'Dashboard',
-            headerLeft: null,
-            headerRight: <Button onPress={() => { Dashboard.logout(navigation) } } title={'Logout'}></Button>
-        }
-    };
 
     constructor(props) {
         super(props);
 
         this.state = {
+            jwt: '',
             cards: [],
             openModal: false,
             cardTitle: '',
             cardContent: ''
         }
     }
+
     componentDidMount() {
-        this.getCards();
+        deviceStorage.getItem('jwt_token').then((jwt) => {
+            this.setState({jwt: jwt});
+            apiService.getCards(jwt).then((response) => {
+                this.setState({
+                    cards: response
+                })
+            });
+        });
     }
 
-    getCards = () => {
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-                axios.get(`http://todo-api.test/api/tasks`, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    if(response.status == 200) {
-                        this.setState({
-                            cards: response.data,
-                        });
-                        console.log(this.state.cards);
-                    }
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
+    modalOnOk = () => {
+        apiService.addCard(this.state.jwt, this.state.cardTitle, this.state.cardContent).then(() => {
+            apiService.getCards(this.state.jwt).then((response) => {
+                this.setState({
+                    cards: response
                 });
-
-            }else{
-                console.log(error);
-            }
-        });
-    };
-
-    addNewCard = () => {
-        this.setState({
-            openModal: true
+                this.setState({openModal: false});
+            });
         })
     };
 
-    modalClickAdd = () => {
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-
-                axios.post(`http://todo-api.test/api/tasks`, {
-                   title: this.state.cardTitle,
-                   content: this.state.cardContent
-                }, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    if(response.status == 201) {
-                        this.getCards();
-                        this.setState({ openModal: false });
-                    }
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
+    onDeleteEvent = (jwt, id) => {
+        apiService.deleteCard(jwt, id).then(() => {
+            apiService.getCards(jwt).then((response) => {
+                this.setState({
+                    cards: response
                 });
-
-            }else{
-                console.log(error);
-            }
-        });
-
+            });
+        })
     };
 
-    modalClickCancel = () => {
-        this.setState({ openModal: false });
-    };
-
-    deleteCard = (id) => {
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-                axios.delete(`http://todo-api.test/api/tasks/${id}`, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    if(response.status == 200) {
-                        this.getCards();
-                        this.setState({ openModal: false });
-                    }
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
-                });
-
-            }else{
-                console.log(error);
-            }
+    onEditEvent = (jwt, id) => {
+        this.props.navigation.navigate('Edit', {
+            id: id,
+            jwt: jwt
         });
     };
 
-    editCard = (id) => {
-        this.props.navigation.navigate('Edit', { id: id, getCards: () => {this.getCards()} });
-    };
-
-    static logout = (navigation) => {
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-                axios.get(`http://todo-api.test/api/logout`, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    if(response.status == 200) {
-
-                        AsyncStorage.removeItem('jwt_token');
-                        navigation.navigate('Login');
-
-                    }
-                    console.log(response);
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
-                });
-
-            }else{
-                console.log(error);
-            }
+    logout = (navigation) => {
+        apiService.logout(this.state.jwt).then((response) => {
+            deviceStorage.removeItem('jwt_token').then(() => {
+                this.setState({ jwt: '' });
+                navigation.navigate('Login');
+            });
         });
     };
 
     toggleDone = (card) => {
-        const isDone = () => {
-            if(card.is_done){
-                return false;
-            }else if(!card.is_done){
-                return true;
-            }
-        };
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-                axios.patch(`http://todo-api.test/api/tasks/${card.id}`,{
-                    'is_done': isDone()
-                }, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    this.getCards();
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
+        apiService.toggleDone(this.state.jwt, card).then(() => {
+            apiService.getCards(this.state.jwt).then((response) => {
+                this.setState({
+                    cards: response
                 });
-            }else{
-                console.log(error);
-            }
+            });
         });
     };
 
     togglePriority = (card, priorityLevel) => {
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-                axios.patch(`http://todo-api.test/api/tasks/${card.id}`,{
-                    'priority': priorityLevel
-                }, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    this.getCards();
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
-                });
-            }else{
-                console.log(error);
-            }
+        apiService.togglePriority(this.state.jwt, card, priorityLevel).then(() => {
+           apiService.getCards(this.state.jwt).then((response) => {
+               this.setState({
+                   cards: response
+               });
+           });
         });
     };
 
@@ -203,78 +98,97 @@ export default class Dashboard extends React.Component {
         let {cardTitle} = this.state.cardTitle;
         let {cardContent} = this.state.cardContent;
 
-        if(this.state.openModal) {
+        if (this.state.openModal) {
             modal = <MaterialDialog
-                        title="Add new stuff in TODO list"
-                        visible={this.state.openModal}
-                        okLabel={"ADD"}
-                        onOk={this.modalClickAdd.bind(this)}
-                        onCancel={this.modalClickCancel.bind(this)}
-                        colorAccent={'#3949ab'}>
-                    <View>
-                        <TextField
-                            label='Title'
-                            value={cardTitle}
-                            onChangeText={ (cardTitle) => this.setState({cardTitle})}
-                        />
-                        <TextField
-                            label='Content'
-                            multiline={true}
-                            value={cardContent}
-                            onChangeText={ (cardContent) => this.setState({cardContent})}
-                        />
-                    </View>
-                    </MaterialDialog>;
+                title="Add new stuff in TODO list"
+                visible={this.state.openModal}
+                okLabel={"ADD"}
+                onOk={() => {
+                    this.modalOnOk()
+                }}
+                onCancel={() => {
+                    this.setState({openModal: false});
+                }}
+                colorAccent={'#3949ab'}>
+                <View>
+                    <TextField
+                        label='Title'
+                        value={cardTitle}
+                        onChangeText={(cardTitle) => this.setState({cardTitle})}
+                    />
+                    <TextField
+                        label='Content'
+                        multiline={true}
+                        value={cardContent}
+                        onChangeText={(cardContent) => this.setState({cardContent})}
+                    />
+                </View>
+            </MaterialDialog>;
         }
 
-        for(let i = 0; i < this.state.cards.length ; i++){
+        for (let i = 0; i < this.state.cards.length; i++) {
             cardsToShow.push(
-                <Card key={this.state.cards[i].id} number={this.state.cards[i].id} style={[this.state.cards[i].is_done ? styles.cardDone : styles.card]}>
+                <Card key={this.state.cards[i].id} number={this.state.cards[i].id}
+                      style={[this.state.cards[i].is_done ? styles.cardDone : styles.card]}>
                     <CardTitle
                         title={this.state.cards[i].title}
                     />
-                    <CardContent text={this.state.cards[i].content} style={styles.cardContent} />
+                    <CardContent text={this.state.cards[i].content} style={styles.cardContent}/>
                     <CardAction
                         separator={true}
                         inColumn={false}>
                         <CardButton
-                            onPress={() => {this.editCard(this.state.cards[i].id)}}
+                            onPress={() => {
+                                this.onEditEvent(this.state.jwt, this.state.cards[i].id)
+                            }}
                             title="Edit"
                             color="#3949ab"
                         />
                         <CardButton
-                            onPress={() => {this.deleteCard(this.state.cards[i].id)}}
+                            onPress={() => {
+                                this.onDeleteEvent(this.state.jwt, this.state.cards[i].id)
+                            }}
                             title="Delete"
                             color="red"
                         />
                         <CardButton
-                            onPress={() => {this.toggleDone(this.state.cards[i])}}
+                            onPress={() => {
+                                this.toggleDone(this.state.cards[i])
+                            }}
                             title="Done"
                             color="green"
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i], 0)}}
+                            onPress={() => {
+                                this.togglePriority(this.state.cards[i], 0)
+                            }}
                             title="none"
                             color={[this.state.cards[i].priority === 0 ? '#fff' : '#E50000']}
-                            style = {[this.state.cards[i].priority === 0 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
+                            style={[this.state.cards[i].priority === 0 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i], 1)}}
+                            onPress={() => {
+                                this.togglePriority(this.state.cards[i], 1)
+                            }}
                             title="!"
                             color={[this.state.cards[i].priority === 1 ? '#fff' : '#E50000']}
-                            style = {[this.state.cards[i].priority === 1 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
+                            style={[this.state.cards[i].priority === 1 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i], 2)}}
+                            onPress={() => {
+                                this.togglePriority(this.state.cards[i], 2)
+                            }}
                             title="!!"
                             color={[this.state.cards[i].priority === 2 ? '#fff' : '#E50000']}
-                            style = {[this.state.cards[i].priority === 2 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
+                            style={[this.state.cards[i].priority === 2 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                         />
                         <CardButton
-                            onPress={() => {this.togglePriority(this.state.cards[i], 3)}}
+                            onPress={() => {
+                                this.togglePriority(this.state.cards[i], 3)
+                            }}
                             title="!!!"
                             color={[this.state.cards[i].priority === 3 ? '#fff' : '#E50000']}
-                            style = {[this.state.cards[i].priority === 3 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority ]}
+                            style={[this.state.cards[i].priority === 3 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                         />
                     </CardAction>
                 </Card>
@@ -289,11 +203,15 @@ export default class Dashboard extends React.Component {
             }}>
                 {cardsToShow.reverse()}
                 {modal}
-                <ActionButton style={styles.plusButton} onPress={() => {this.addNewCard()}}/>
+                <ActionButton style={styles.plusButton} onPress={() => {
+                    this.setState({openModal: true})
+                }}/>
             </ScrollView>
         );
     }
 }
+
+export const dashboard = new Dashboard();
 
 const styles = StyleSheet.create({
     card: {
