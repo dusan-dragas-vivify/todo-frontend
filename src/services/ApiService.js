@@ -7,9 +7,8 @@ import AxiosClientService from "./AxiosClientService";
 export default class ApiService {
 
     getCards = (jwt) => {
-        return AxiosClientService.get(`/tasks`, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response.data)
+        return AxiosClientService.get(`/tasks`)
+            .then((response) => response.data)
             .catch((error) => {
                 if (error.response) {
                     console.log(error.response);
@@ -18,9 +17,8 @@ export default class ApiService {
     };
 
     getCard = (jwt, id) => {
-        return AxiosClientService.get(`/tasks/${id}`, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response.data)
+        return AxiosClientService.get(`/tasks/${id}`)
+            .then((response) => response.data)
             .catch((error) => {
                 if (error.response) {
                     console.log(error.response);
@@ -32,11 +30,10 @@ export default class ApiService {
         return AxiosClientService.post(`/tasks`, {
             title: title,
             content: content
-        }, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => {
-            response.data
         })
+            .then((response) => {
+                response.data
+            })
             .catch((error) => {
                 if (error.response) {
                     console.log(error.response);
@@ -45,9 +42,8 @@ export default class ApiService {
     };
 
     deleteCard = (jwt, id) => {
-        return AxiosClientService.delete(`/tasks/${id}`, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response.data)
+        return AxiosClientService.delete(`/tasks/${id}`)
+            .then((response) => response.data)
             .catch((error) => {
                 if (error.response) {
                     console.log(error.response);
@@ -59,38 +55,35 @@ export default class ApiService {
         return AxiosClientService.patch(`/tasks/${id}`, {
             title: title,
             content: content
-        }, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response)
+        })
+            .then((response) => response)
             .catch((error) => {
-            if (error.response) {
-                console.log(error.response);
-            }
-        });
+                if (error.response) {
+                    console.log(error.response);
+                }
+            });
     };
 
     toggleDone = (jwt, card) => {
         return AxiosClientService.patch(`/tasks/${card.id}`, {
             'is_done': !card.is_done
-        }, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response.data).catch((error) => {
-            if (error.response) {
-                console.log(error.response);
-            }
-        });
+        })
+            .then((response) => response.data).catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+            });
     };
 
     togglePriority = (jwt, card, priorityLevel) => {
         return AxiosClientService.patch(`/tasks/${card.id}`, {
             'priority': priorityLevel
-        }, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => response.data).catch((error) => {
-            if (error.response) {
-                console.log(error.response);
-            }
-        });
+        })
+            .then((response) => response.data).catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+            });
     };
 
     login = (username, password) => {
@@ -105,28 +98,24 @@ export default class ApiService {
     };
 
     logout = (jwt) => {
-        return AxiosClientService.get(`/logout`, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) => {
-            response.data
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error.response);
-            }
-        });
+        return AxiosClientService.get(`/logout`)
+            .then((response) => response.data)
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+            });
     };
 
     getUser = (jwt) => {
-        return AxiosClientService.get(`/user`, {
-            headers: {Authorization: `Bearer ${jwt}`},
-        }).then((response) =>
-            response
-        ).catch((error) => {
-            console.log(error);
-            if (error.response) {
-                console.log(error.response);
-            }
-        });
+        return AxiosClientService.get(`/user`)
+            .then((response) => response)
+            .catch((error) => {
+                console.log(error);
+                if (error.response) {
+                    console.log(error.response);
+                }
+            });
     }
 
 }

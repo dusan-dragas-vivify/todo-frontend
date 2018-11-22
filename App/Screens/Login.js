@@ -4,6 +4,7 @@ import {TextField} from 'react-native-material-textfield';
 import {RaisedTextButton} from 'react-native-material-buttons';
 import {deviceStorage} from "../../src/services/DeviceStorage";
 import {apiService} from "../../src/services/ApiService";
+import AxiosClientService from "../../src/services/AxiosClientService";
 
 class Login extends React.Component {
 
@@ -26,6 +27,7 @@ class Login extends React.Component {
                     password: ''
                 });
                 deviceStorage.saveItem("jwt_token", response.data.token);
+                AxiosClientService.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
                 this.props.navigation.navigate('Dashboard');
             } else {
                 if (response.data.error) {
