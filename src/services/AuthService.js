@@ -14,7 +14,11 @@ export default class AuthService {
                 });
             });
         });
-    }
+    };
+
+    login = () => {
+        // TODO Whole login logic here
+    };
 }
 
 export const authService = new AuthService();

@@ -60,7 +60,8 @@ export default class Dashboard extends React.Component {
     onEditEvent = (id) => {
         this.props.navigation.navigate('Edit', {
             id: id,
-            jwt: this.state.jwt
+            jwt: this.state.jwt,
+            reload: () => {this.componentDidMount()}
         });
     };
 

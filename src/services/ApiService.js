@@ -22,6 +22,17 @@ export default class ApiService {
             });
     };
 
+    getCard = (jwt, id) => {
+        return this.axiosInstance.get(`/tasks/${id}`, {
+            headers: {Authorization: `Bearer ${jwt}`},
+        }).then((response) => response.data)
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+            });
+    };
+
     addCard = (jwt, title, content) => {
         return this.axiosInstance.post(`/tasks`, {
             title: title,
@@ -47,6 +58,20 @@ export default class ApiService {
                     console.log(error.response);
                 }
             });
+    };
+
+    updateCard = (jwt, id, title, content) => {
+        return this.axiosInstance.patch(`/tasks/${id}`, {
+            title: title,
+            content: content
+        }, {
+            headers: {Authorization: `Bearer ${jwt}`},
+        }).then((response) => response)
+            .catch((error) => {
+            if (error.response) {
+                console.log(error.response);
+            }
+        });
     };
 
     toggleDone = (jwt, card) => {

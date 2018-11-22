@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, ScrollView, AsyncStorage} from 'react-native';
-import { TextField } from 'react-native-material-textfield';
-import { RaisedTextButton } from 'react-native-material-buttons';
-import axios from "axios";
+import {TextField} from 'react-native-material-textfield';
+import {RaisedTextButton} from 'react-native-material-buttons';
 import {apiService} from "../../src/services/ApiService";
 
 export default class Edit extends React.Component {
@@ -12,73 +11,38 @@ export default class Edit extends React.Component {
 
         this.state = {
             title: '',
-            content : ''
+            content: ''
         }
     }
 
-
     componentDidMount() {
-        this.getCard(this.props.navigation.state.params.id);
+        AsyncStorage.getItem("jwt_token").then((jwt) => {
+            apiService.getCard(jwt, this.props.navigation.state.params.id).then((response) => {
+                this.setState({
+                    title: response.title,
+                    content: response.content
+                })
+            });
+        });
     }
 
     componentWillUnmount() {
         const {params} = this.props.navigation.state;
-        apiService.getCards(params.jwt);
+        params.reload();
     }
 
-    getCard = (id) => {
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-                axios.get(`http://todo-api.test/api/tasks/${id}`, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    if(response.status == 200) {
-                        this.setState({
-                            title: response.data.title,
-                            content: response.data.content
-                        });
-                    }
-                    console.log(response.data);
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
-                });
-
-            }else{
-                console.log(error);
-            }
-        });
-    };
-
     updateCard = (id) => {
-        AsyncStorage.getItem("jwt_token", (error, result) => {
-            if(!error) {
-                const jwt = result;
-                axios.patch(`http://todo-api.test/api/tasks/${id}`,{
-                    title: this.state.title,
-                    content: this.state.content
-                }, {
-                    headers: { Authorization: `Bearer ${jwt}` },
-                }).then((response) => {
-                    if(response.status == 200) {
-                        this.props.navigation.navigate('Dashboard');
-                    }
-                }).catch((error) => {
-                    if(error.response){
-                        console.log(error.response);
-                    }
-                });
-
-            }else{
+        AsyncStorage.getItem("jwt_token").then((jwt) => {
+            apiService.updateCard(jwt, id, this.state.title, this.state.content).then((response) => {
+                this.props.navigation.navigate('Dashboard');
+            }).catch((error) => {
                 console.log(error);
-            }
+            });
         });
     };
 
-    render(){
-        return(
+    render() {
+        return (
             <View style={styles.container}>
                 <Text>Edit screen for card with id: {this.props.navigation.state.params.id}</Text>
                 <TextField
@@ -97,7 +61,9 @@ export default class Edit extends React.Component {
                     title='Update'
                     titleColor={'#fff'}
                     color='#3949ab'
-                    onPress={() => {this.updateCard(this.props.navigation.state.params.id)}}
+                    onPress={() => {
+                        this.updateCard(this.props.navigation.state.params.id)
+                    }}
                 />
             </View>
         )

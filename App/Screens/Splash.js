@@ -27,9 +27,20 @@ export default class Splash extends React.Component {
 
     render() {
         return (
-            <View>
-                <Text>Splash Screen!</Text>
+            <View style={styles.splashContainer}>
+                <Text style={styles.splashText}>Splash Screen!</Text>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    splashContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems:  'center',
+    },
+    splashText: {
+        fontSize: 80
+    }
+});

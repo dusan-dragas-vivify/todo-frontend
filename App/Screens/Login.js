@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
 import {RaisedTextButton} from 'react-native-material-buttons';
-import axios from 'axios';
 import {deviceStorage} from "../../src/services/DeviceStorage";
 import {apiService} from "../../src/services/ApiService";
 
