@@ -1,14 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, AsyncStorage, Button} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
 import {RaisedTextButton} from 'react-native-material-buttons';
 import {apiService} from "../../src/services/ApiService";
+import {authService} from "../../src/services/AuthService";
 
 class Edit extends React.Component {
 
-    static navigationOptions = () => {
+    static navigationOptions = ({navigation}) => {
         return {
-            title: 'Edit'
+            title: 'Edit',
+            headerRight: <Button onPress={() => {
+                authService.logout(navigation)
+            }} title={'Logout'}></Button>
         }
     };
 
