@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, ScrollView, AsyncStorage, Button} from 'react-na
 import {apiService} from "../../src/services/ApiService";
 import {deviceStorage} from "../../src/services/DeviceStorage";
 
-export default class Splash extends React.Component {
+class Splash extends React.Component {
 
     componentDidMount() {
         deviceStorage.getItem('jwt_token').then((jwt) => {
@@ -29,6 +29,8 @@ export default class Splash extends React.Component {
         )
     }
 }
+
+export default Splash;
 
 const styles = StyleSheet.create({
     splashContainer: {

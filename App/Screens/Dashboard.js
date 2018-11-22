@@ -6,7 +6,7 @@ import {deviceStorage} from "../../src/services/DeviceStorage";
 import MyModal from "../Components/MyModal";
 import TodoList from "../Components/TodoList";
 
-export default class Dashboard extends React.Component {
+class Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
@@ -61,7 +61,9 @@ export default class Dashboard extends React.Component {
         this.props.navigation.navigate('Edit', {
             id: id,
             jwt: this.state.jwt,
-            reload: () => {this.componentDidMount()}
+            reload: () => {
+                this.componentDidMount()
+            }
         });
     };
 
@@ -124,6 +126,8 @@ export default class Dashboard extends React.Component {
         );
     }
 }
+
+export default Dashboard;
 
 const styles = StyleSheet.create({
     plusButton: {

@@ -4,7 +4,7 @@ import {TextField} from 'react-native-material-textfield';
 import {RaisedTextButton} from 'react-native-material-buttons';
 import {apiService} from "../../src/services/ApiService";
 
-export default class Edit extends React.Component {
+class Edit extends React.Component {
 
     constructor(props) {
         super(props);
@@ -69,6 +69,8 @@ export default class Edit extends React.Component {
         )
     }
 }
+
+export default Edit;
 
 const styles = StyleSheet.create({
     container: {

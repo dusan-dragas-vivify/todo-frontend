@@ -5,7 +5,7 @@ import {RaisedTextButton} from 'react-native-material-buttons';
 import {deviceStorage} from "../../src/services/DeviceStorage";
 import {apiService} from "../../src/services/ApiService";
 
-export default class Login extends React.Component {
+class Login extends React.Component {
 
     constructor(props) {
         super(props);
@@ -82,6 +82,8 @@ export default class Login extends React.Component {
         );
     }
 }
+
+export default Login;
 
 const styles = StyleSheet.create({
     container: {
