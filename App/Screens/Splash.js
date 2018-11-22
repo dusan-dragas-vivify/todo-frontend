@@ -2,16 +2,22 @@ import React from 'react';
 import {StyleSheet, Text, View, ScrollView, AsyncStorage, Button} from 'react-native';
 import {apiService} from "../../src/services/ApiService";
 import {deviceStorage} from "../../src/services/DeviceStorage";
+import AxiosClientService from "../../src/services/AxiosClientService";
 
 class Splash extends React.Component {
 
     componentDidMount() {
-        apiService.getUser().then((response) => {
-            if (response.status === 200) {
-                this.props.navigation.navigate('Dashboard');
-            } else {
+        deviceStorage.getItem('jwt_token').then((jwt) => {
+            apiService.getUser(jwt).then((response) => {
+                if (response.status === 200) {
+                    AxiosClientService.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+                    this.props.navigation.navigate('Dashboard');
+                } else {
+                    this.props.navigation.navigate('Login');
+                }
+            }).catch((error) => {
                 this.props.navigation.navigate('Login');
-            }
+            });
         }).catch((error) => {
             this.props.navigation.navigate('Login');
         });

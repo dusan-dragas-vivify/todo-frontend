@@ -107,8 +107,10 @@ export default class ApiService {
             });
     };
 
-    getUser = () => {
-        return AxiosClientService.get(`/user`)
+    getUser = (jwt) => {
+        return AxiosClientService.get(`/user`, {
+            headers: {Authorization: `Bearer ${jwt}`}
+        })
             .then((response) => response)
             .catch((error) => {
                 console.log(error);
