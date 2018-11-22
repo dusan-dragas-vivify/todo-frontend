@@ -1,7 +1,4 @@
 import React from 'react';
-import {AsyncStorage} from "react-native";
-import axios from "axios";
-import {deviceStorage} from "./DeviceStorage";
 import AxiosClientService from "./AxiosClientService";
 
 export default class ApiService {
