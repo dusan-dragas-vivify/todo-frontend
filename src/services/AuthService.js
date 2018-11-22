@@ -4,8 +4,6 @@ import {deviceStorage} from "./DeviceStorage";
 
 export default class AuthService {
 
-    constructor(props){}
-
     logout = (navigation) => {
         deviceStorage.getItem('jwt_token').then((jwt) => {
             apiService.logout(jwt).then((response) => {
