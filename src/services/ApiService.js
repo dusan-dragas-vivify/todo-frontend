@@ -2,17 +2,12 @@ import React from 'react';
 import {AsyncStorage} from "react-native";
 import axios from "axios";
 import {deviceStorage} from "./DeviceStorage";
+import AxiosClientService from "./AxiosClientService";
 
 export default class ApiService {
 
-    constructor(props) {
-        this.axiosInstance = axios.create({
-            baseURL: 'http://todo-api.test/api',
-        });
-    }
-
     getCards = (jwt) => {
-        return this.axiosInstance.get(`/tasks`, {
+        return AxiosClientService.get(`/tasks`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) => response.data)
             .catch((error) => {
@@ -23,7 +18,7 @@ export default class ApiService {
     };
 
     getCard = (jwt, id) => {
-        return this.axiosInstance.get(`/tasks/${id}`, {
+        return AxiosClientService.get(`/tasks/${id}`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) => response.data)
             .catch((error) => {
@@ -34,7 +29,7 @@ export default class ApiService {
     };
 
     addCard = (jwt, title, content) => {
-        return this.axiosInstance.post(`/tasks`, {
+        return AxiosClientService.post(`/tasks`, {
             title: title,
             content: content
         }, {
@@ -50,7 +45,7 @@ export default class ApiService {
     };
 
     deleteCard = (jwt, id) => {
-        return this.axiosInstance.delete(`/tasks/${id}`, {
+        return AxiosClientService.delete(`/tasks/${id}`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) => response.data)
             .catch((error) => {
@@ -61,7 +56,7 @@ export default class ApiService {
     };
 
     updateCard = (jwt, id, title, content) => {
-        return this.axiosInstance.patch(`/tasks/${id}`, {
+        return AxiosClientService.patch(`/tasks/${id}`, {
             title: title,
             content: content
         }, {
@@ -75,7 +70,7 @@ export default class ApiService {
     };
 
     toggleDone = (jwt, card) => {
-        return this.axiosInstance.patch(`/tasks/${card.id}`, {
+        return AxiosClientService.patch(`/tasks/${card.id}`, {
             'is_done': !card.is_done
         }, {
             headers: {Authorization: `Bearer ${jwt}`},
@@ -87,7 +82,7 @@ export default class ApiService {
     };
 
     togglePriority = (jwt, card, priorityLevel) => {
-        return this.axiosInstance.patch(`/tasks/${card.id}`, {
+        return AxiosClientService.patch(`/tasks/${card.id}`, {
             'priority': priorityLevel
         }, {
             headers: {Authorization: `Bearer ${jwt}`},
@@ -99,15 +94,18 @@ export default class ApiService {
     };
 
     login = (username, password) => {
-        return this.axiosInstance.post(`/login`, {
+        return AxiosClientService.post(`/login`, {
             username: username,
             password: password
-        }).then((response) => response)
-            .catch((error) => error.response);
+        }).then((response) =>
+            response
+        ).catch((error) =>
+            error.response
+        );
     };
 
     logout = (jwt) => {
-        return this.axiosInstance.get(`/logout`, {
+        return AxiosClientService.get(`/logout`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) => {
             response.data
@@ -119,7 +117,7 @@ export default class ApiService {
     };
 
     getUser = (jwt) => {
-        return this.axiosInstance.get(`/user`, {
+        return AxiosClientService.get(`/user`, {
             headers: {Authorization: `Bearer ${jwt}`},
         }).then((response) =>
             response
