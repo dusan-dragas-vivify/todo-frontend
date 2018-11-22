@@ -6,6 +6,12 @@ import {apiService} from "../../src/services/ApiService";
 
 class Edit extends React.Component {
 
+    static navigationOptions = () => {
+        return {
+            title: 'Edit'
+        }
+    };
+
     constructor(props) {
         super(props);
 
@@ -16,13 +22,11 @@ class Edit extends React.Component {
     }
 
     componentDidMount() {
-        AsyncStorage.getItem("jwt_token").then((jwt) => {
-            apiService.getCard(jwt, this.props.navigation.state.params.id).then((response) => {
-                this.setState({
-                    title: response.title,
-                    content: response.content
-                })
-            });
+        apiService.getCard(this.props.navigation.state.params.id).then((response) => {
+            this.setState({
+                title: response.title,
+                content: response.content
+            })
         });
     }
 
@@ -32,12 +36,10 @@ class Edit extends React.Component {
     }
 
     updateCard = (id) => {
-        AsyncStorage.getItem("jwt_token").then((jwt) => {
-            apiService.updateCard(jwt, id, this.state.title, this.state.content).then((response) => {
-                this.props.navigation.navigate('Dashboard');
-            }).catch((error) => {
-                console.log(error);
-            });
+        apiService.updateCard(id, this.state.title, this.state.content).then((response) => {
+            this.props.navigation.navigate('Dashboard');
+        }).catch((error) => {
+            console.log(error);
         });
     };
 

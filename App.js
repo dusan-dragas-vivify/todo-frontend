@@ -14,27 +14,13 @@ const RootStack = createStackNavigator(
             screen: Splash
         },
         Login: {
-            screen: Login,
-            navigationOptions: () => ({
-                title: 'Home'
-            }),
+            screen: Login
         },
         Dashboard: {
-            screen: Dashboard,
-            navigationOptions: (props) => ({
-                title: 'Dashboard',
-                headerLeft: null,
-                headerRight: <Button onPress={() => {
-                    authService.logout(props.navigation)
-                }} title={'Logout'}></Button>
-            }),
+            screen: Dashboard
         },
         Edit: {
-            screen: Edit,
-            navigationOptions: () => ({
-                title: 'Edit'
-            }),
-
+            screen: Edit
         }
     },
     {

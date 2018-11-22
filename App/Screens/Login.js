@@ -8,6 +8,12 @@ import AxiosClientService from "../../src/services/AxiosClientService";
 
 class Login extends React.Component {
 
+    static navigationOptions = () => {
+        return {
+            title: 'Home'
+        }
+    };
+
     constructor(props) {
         super(props);
 

@@ -6,16 +6,12 @@ import {deviceStorage} from "../../src/services/DeviceStorage";
 class Splash extends React.Component {
 
     componentDidMount() {
-        deviceStorage.getItem('jwt_token').then((jwt) => {
-            apiService.getUser(jwt).then((response) => {
-                if (response.status === 200) {
-                    this.props.navigation.navigate('Dashboard');
-                } else {
-                    this.props.navigation.navigate('Login');
-                }
-            }).catch((error) => {
+        apiService.getUser().then((response) => {
+            if (response.status === 200) {
+                this.props.navigation.navigate('Dashboard');
+            } else {
                 this.props.navigation.navigate('Login');
-            });
+            }
         }).catch((error) => {
             this.props.navigation.navigate('Login');
         });
@@ -36,7 +32,7 @@ const styles = StyleSheet.create({
     splashContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems:  'center',
+        alignItems: 'center',
     },
     splashText: {
         fontSize: 80

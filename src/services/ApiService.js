@@ -6,7 +6,7 @@ import AxiosClientService from "./AxiosClientService";
 
 export default class ApiService {
 
-    getCards = (jwt) => {
+    getCards = () => {
         return AxiosClientService.get(`/tasks`)
             .then((response) => response.data)
             .catch((error) => {
@@ -16,7 +16,7 @@ export default class ApiService {
             });
     };
 
-    getCard = (jwt, id) => {
+    getCard = (id) => {
         return AxiosClientService.get(`/tasks/${id}`)
             .then((response) => response.data)
             .catch((error) => {
@@ -26,7 +26,7 @@ export default class ApiService {
             });
     };
 
-    addCard = (jwt, title, content) => {
+    addCard = (title, content) => {
         return AxiosClientService.post(`/tasks`, {
             title: title,
             content: content
@@ -41,7 +41,7 @@ export default class ApiService {
             });
     };
 
-    deleteCard = (jwt, id) => {
+    deleteCard = (id) => {
         return AxiosClientService.delete(`/tasks/${id}`)
             .then((response) => response.data)
             .catch((error) => {
@@ -51,7 +51,7 @@ export default class ApiService {
             });
     };
 
-    updateCard = (jwt, id, title, content) => {
+    updateCard = (id, title, content) => {
         return AxiosClientService.patch(`/tasks/${id}`, {
             title: title,
             content: content
@@ -64,7 +64,7 @@ export default class ApiService {
             });
     };
 
-    toggleDone = (jwt, card) => {
+    toggleDone = (card) => {
         return AxiosClientService.patch(`/tasks/${card.id}`, {
             'is_done': !card.is_done
         })
@@ -75,7 +75,7 @@ export default class ApiService {
             });
     };
 
-    togglePriority = (jwt, card, priorityLevel) => {
+    togglePriority = (card, priorityLevel) => {
         return AxiosClientService.patch(`/tasks/${card.id}`, {
             'priority': priorityLevel
         })
@@ -97,7 +97,7 @@ export default class ApiService {
         );
     };
 
-    logout = (jwt) => {
+    logout = () => {
         return AxiosClientService.get(`/logout`)
             .then((response) => response.data)
             .catch((error) => {
@@ -107,7 +107,7 @@ export default class ApiService {
             });
     };
 
-    getUser = (jwt) => {
+    getUser = () => {
         return AxiosClientService.get(`/user`)
             .then((response) => response)
             .catch((error) => {

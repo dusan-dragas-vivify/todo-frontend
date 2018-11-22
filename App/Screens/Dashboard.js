@@ -5,14 +5,24 @@ import {apiService} from "../../src/services/ApiService";
 import {deviceStorage} from "../../src/services/DeviceStorage";
 import MyModal from "../Components/MyModal";
 import TodoList from "../Components/TodoList";
+import {authService} from "../../src/services/AuthService";
 
 class Dashboard extends React.Component {
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Dashboard',
+            headerLeft: null,
+            headerRight: <Button onPress={() => {
+                authService.logout(navigation)
+            }} title={'Logout'}></Button>
+        }
+    };
 
     constructor(props) {
         super(props);
 
         this.state = {
-            jwt: '',
             cards: [],
             openModal: false,
             cardTitle: '',
@@ -21,20 +31,17 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        deviceStorage.getItem('jwt_token').then((jwt) => {
-            this.setState({jwt: jwt});
-            apiService.getCards(jwt).then((response) => {
-                this.setState({
-                    cards: response
-                })
-            });
+        apiService.getCards().then((response) => {
+            this.setState({
+                cards: response
+            })
         });
     }
 
     modalOnOk = () => {
-        apiService.addCard(this.state.jwt, this.state.cardTitle, this.state.cardContent).then((resp) => {
+        apiService.addCard(this.state.cardTitle, this.state.cardContent).then((resp) => {
             let a = 1;
-            apiService.getCards(this.state.jwt).then((response) => {
+            apiService.getCards().then((response) => {
                 this.setState({
                     cards: response
                 });
@@ -48,8 +55,8 @@ class Dashboard extends React.Component {
     };
 
     onDeleteEvent = (id) => {
-        apiService.deleteCard(this.state.jwt, id).then(() => {
-            apiService.getCards(this.state.jwt).then((response) => {
+        apiService.deleteCard(id).then(() => {
+            apiService.getCards().then((response) => {
                 this.setState({
                     cards: response
                 });
@@ -60,7 +67,6 @@ class Dashboard extends React.Component {
     onEditEvent = (id) => {
         this.props.navigation.navigate('Edit', {
             id: id,
-            jwt: this.state.jwt,
             reload: () => {
                 this.componentDidMount()
             }
@@ -68,8 +74,8 @@ class Dashboard extends React.Component {
     };
 
     toggleDone = (card) => {
-        apiService.toggleDone(this.state.jwt, card).then(() => {
-            apiService.getCards(this.state.jwt).then((response) => {
+        apiService.toggleDone(card).then(() => {
+            apiService.getCards().then((response) => {
                 this.setState({
                     cards: response
                 });
@@ -78,8 +84,8 @@ class Dashboard extends React.Component {
     };
 
     togglePriority = (card, priorityLevel) => {
-        apiService.togglePriority(this.state.jwt, card, priorityLevel).then(() => {
-            apiService.getCards(this.state.jwt).then((response) => {
+        apiService.togglePriority(card, priorityLevel).then(() => {
+            apiService.getCards().then((response) => {
                 this.setState({
                     cards: response
                 });
