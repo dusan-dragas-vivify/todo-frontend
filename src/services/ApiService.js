@@ -9,9 +9,9 @@ export default class ApiService {
             return response.data;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
@@ -22,9 +22,9 @@ export default class ApiService {
             return response.data;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
@@ -38,9 +38,9 @@ export default class ApiService {
             return response.data;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
@@ -51,9 +51,9 @@ export default class ApiService {
             return response.data;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
 
@@ -68,9 +68,9 @@ export default class ApiService {
             return response;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
@@ -83,9 +83,9 @@ export default class ApiService {
             return response.data;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
@@ -98,9 +98,9 @@ export default class ApiService {
             return response.data;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
@@ -114,9 +114,9 @@ export default class ApiService {
             return response;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
@@ -127,9 +127,9 @@ export default class ApiService {
             return response.data;
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
 
@@ -143,9 +143,9 @@ export default class ApiService {
             return response
         } catch (e) {
             if (e.response) {
-                console.log(e.response);
+                return e.response;
             } else {
-                console.log(e);
+                return e;
             }
         }
     };
