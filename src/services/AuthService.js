@@ -5,13 +5,11 @@ import AxiosClientService from "./AxiosClientService";
 
 export default class AuthService {
 
-    logout = (navigation) => {
-        apiService.logout().then((response) => {
-            deviceStorage.removeItem('jwt_token').then(() => {
-                AxiosClientService.defaults.headers.common['Authorization'] = null;
-                navigation.navigate('Login');
-            });
-        });
+    async logout(navigation) {
+        await apiService.logout();
+        await deviceStorage.removeItem('jwt_token');
+        AxiosClientService.defaults.headers.common['Authorization'] = null;
+        navigation.navigate('Login');
     };
 
     login = () => {

@@ -10,7 +10,8 @@ class Login extends React.Component {
 
     static navigationOptions = () => {
         return {
-            title: 'Home'
+            title: 'Home',
+            headerLeft: null,
         }
     };
 
@@ -24,8 +25,9 @@ class Login extends React.Component {
         }
     }
 
-    loginRequest = () => {
-        apiService.login(this.state.username, this.state.password).then((response) => {
+    async loginRequest() {
+        try {
+            const response = await apiService.login(this.state.username, this.state.password);
             if (response.status === 200) {
                 this.setState({
                     errorMessage: '',
@@ -46,13 +48,13 @@ class Login extends React.Component {
                     })
                 }
             }
-        }).catch((error) => {
-            if (error.response) {
+        } catch (e) {
+            if (e.response) {
                 this.setState({
-                    errorMessage: error.response.data.error
+                    errorMessage: e.response.data.error
                 })
             }
-        });
+        }
     };
 
     render() {

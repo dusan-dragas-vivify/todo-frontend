@@ -25,13 +25,12 @@ class Edit extends React.Component {
         }
     }
 
-    componentDidMount() {
-        apiService.getCard(this.props.navigation.state.params.id).then((response) => {
-            this.setState({
-                title: response.title,
-                content: response.content
-            })
-        });
+    async componentDidMount() {
+        const response = await apiService.getCard(this.props.navigation.state.params.id);
+        this.setState({
+            title: response.title,
+            content: response.content
+        })
     }
 
     componentWillUnmount() {
@@ -39,12 +38,13 @@ class Edit extends React.Component {
         params.reload();
     }
 
-    updateCard = (id) => {
-        apiService.updateCard(id, this.state.title, this.state.content).then((response) => {
+    async updateCard(id) {
+        try{
+            const response = await apiService.updateCard(id, this.state.title, this.state.content);
             this.props.navigation.navigate('Dashboard');
-        }).catch((error) => {
-            console.log(error);
-        });
+        }catch (e) {
+            console.log(e);
+        }
     };
 
     render() {

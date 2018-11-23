@@ -6,21 +6,15 @@ import AxiosClientService from "../../src/services/AxiosClientService";
 
 class Splash extends React.Component {
 
-    componentDidMount() {
-        deviceStorage.getItem('jwt_token').then((jwt) => {
-            apiService.getUser(jwt).then((response) => {
-                if (response.status === 200) {
-                    AxiosClientService.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
-                    this.props.navigation.navigate('Dashboard');
-                } else {
-                    this.props.navigation.navigate('Login');
-                }
-            }).catch((error) => {
-                this.props.navigation.navigate('Login');
-            });
-        }).catch((error) => {
+    async componentDidMount() {
+        const jwt = await deviceStorage.getItem('jwt_token');
+        const response = await apiService.getUser(jwt);
+        if (response && response.status === 200) {
+            AxiosClientService.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+            this.props.navigation.navigate('Dashboard');
+        } else {
             this.props.navigation.navigate('Login');
-        });
+        }
     }
 
     render() {
