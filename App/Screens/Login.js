@@ -1,11 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
-import { TextField } from 'react-native-material-textfield';
-import { RaisedTextButton } from 'react-native-material-buttons';
-import axios from 'axios';
-import DeviceStorage from '../../src/services/DeviceStorage';
+import {StyleSheet, Text, View} from 'react-native';
+import {TextField} from 'react-native-material-textfield';
+import {RaisedTextButton} from 'react-native-material-buttons';
+import {deviceStorage} from "../../src/services/DeviceStorage";
+import {apiService} from "../../src/services/ApiService";
+import AxiosClientService from "../../src/services/AxiosClientService";
+import AuthService, {authService} from "../../src/services/AuthService";
 
-export default class Login extends React.Component {
+class Login extends React.Component {
+
+    static navigationOptions = () => {
+        return {
+            title: 'Home',
+            headerLeft: null,
+        }
+    };
 
     constructor(props) {
         super(props);
@@ -17,28 +26,34 @@ export default class Login extends React.Component {
         }
     }
 
-    loginRequest = () => {
+    loginRequest = async () => {
 
-        axios.post(`http://todo-api.test/api/login`, {
-            username: this.state.username,
-            password: this.state.password
-        }).then((response) => {
-            if(response.status == 200) {
+        try {
+            const response = await authService.login(this.state.username, this.state.password, this.props.navigation);
+            if (response.status === 200) {
                 this.setState({
                     errorMessage: '',
                     username: '',
                     password: ''
                 });
-                DeviceStorage.saveItem("jwt_token", response.data.token);
-                this.props.navigation.navigate('Dashboard');
+            } else {
+                if (response.data.error) {
+                    this.setState({
+                        errorMessage: response.data.error
+                    })
+                } else {
+                    this.setState({
+                        errorMessage: `Status ${response.status}`
+                    })
+                }
             }
-        }).catch((error) => {
-            if(error.response){
+        } catch (e) {
+            if (e.response) {
                 this.setState({
-                    errorMessage: error.response.data.error
+                    errorMessage: e.response.data.error
                 })
             }
-        });
+        }
     };
 
     render() {
@@ -50,8 +65,8 @@ export default class Login extends React.Component {
                     label='Username'
                     autoCapitalize={'none'}
                     value={this.state.username}
-                    onFocus = { () => this.setState({ errorMessage: '' })}
-                    onChangeText={ (username) => this.setState({username})}
+                    onFocus={() => this.setState({errorMessage: ''})}
+                    onChangeText={(username) => this.setState({username})}
                 />
                 <TextField
                     style={styles.textField}
@@ -59,8 +74,8 @@ export default class Login extends React.Component {
                     secureTextEntry={true}
                     autoCapitalize={'none'}
                     value={this.state.password}
-                    onFocus = { () => this.setState({ errorMessage: '' })}
-                    onChangeText={ (password) => this.setState({password})}
+                    onFocus={() => this.setState({errorMessage: ''})}
+                    onChangeText={(password) => this.setState({password})}
                 />
                 <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
                 <RaisedTextButton
@@ -68,12 +83,16 @@ export default class Login extends React.Component {
                     title='Login'
                     titleColor={'#fff'}
                     color='#3949ab'
-                    onPress={() => {this.loginRequest()}}
+                    onPress={() => {
+                        this.loginRequest()
+                    }}
                 />
             </View>
         );
     }
 }
+
+export default Login;
 
 const styles = StyleSheet.create({
     container: {

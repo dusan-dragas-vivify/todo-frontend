@@ -1,47 +1,39 @@
 import React from 'react';
-import { Button } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
-import Dashboard from "./App/Components/Dashboard";
-import Login from "./App/Components/Login";
-import Edit from "./App/Components/Edit";
+import {Button} from 'react-native';
+import {createStackNavigator} from 'react-navigation';
+import Splash from "./App/Screens/Splash";
+import Dashboard from "./App/Screens/Dashboard";
+import Login from "./App/Screens/Login";
+import Edit from "./App/Screens/Edit";
+import {dashboard} from "./App/Screens/Dashboard";
+import {authService} from "./src/services/AuthService";
 
-const RootStack = createStackNavigator (
+const RootStack = createStackNavigator(
     {
+        Splash: {
+            screen: Splash
+        },
         Login: {
-            screen: Login,
-            navigationOptions: () => ({
-                title: 'Home'
-            }),
+            screen: Login
         },
         Dashboard: {
             screen: Dashboard
         },
         Edit: {
-            screen: Edit,
-            navigationOptions: () => ({
-                title: 'Edit'
-            }),
-
+            screen: Edit
         }
     },
     {
-        initialRouteName: 'Login',
+        initialRouteName: 'Splash',
     }
 );
 
-export default class App extends React.Component {
+const App = () => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: false,
-            error: false
-        };
-    }
-
-    render() {
     return (
-      <RootStack/>
+        <RootStack/>
     );
-  }
-}
+
+};
+
+export default App;
