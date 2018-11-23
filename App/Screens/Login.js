@@ -5,6 +5,7 @@ import {RaisedTextButton} from 'react-native-material-buttons';
 import {deviceStorage} from "../../src/services/DeviceStorage";
 import {apiService} from "../../src/services/ApiService";
 import AxiosClientService from "../../src/services/AxiosClientService";
+import AuthService, {authService} from "../../src/services/AuthService";
 
 class Login extends React.Component {
 
@@ -26,17 +27,15 @@ class Login extends React.Component {
     }
 
     loginRequest = async () => {
+
         try {
-            const response = await apiService.login(this.state.username, this.state.password);
+            const response = await authService.login(this.state.username, this.state.password, this.props.navigation);
             if (response.status === 200) {
                 this.setState({
                     errorMessage: '',
                     username: '',
                     password: ''
                 });
-                deviceStorage.saveItem("jwt_token", response.data.token);
-                AxiosClientService.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-                this.props.navigation.navigate('Dashboard');
             } else {
                 if (response.data.error) {
                     this.setState({

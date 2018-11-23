@@ -12,9 +12,17 @@ export default class AuthService {
         navigation.navigate('Login');
     };
 
-    login = () => {
+    login = async (username, password, navigation) => {
         // TODO Whole login logic here
-    };
+        const response = await apiService.login(username, password);
+        if (response.status === 200) {
+            deviceStorage.saveItem("jwt_token", response.data.token);
+            AxiosClientService.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+            navigation.navigate('Dashboard');
+        }
+        return response;
+    }
+
 }
 
 export const authService = new AuthService();
