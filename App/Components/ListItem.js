@@ -6,56 +6,56 @@ import CardContent from "react-native-material-cards/CardContent";
 import CardAction from "react-native-material-cards/CardAction";
 import CardButton from "react-native-material-cards/CardButton";
 
-const ListItem = ({...props}) => {
+const ListItem = ({card, onEditEvent, onDeleteEvent, toggleDone, togglePriority}) => {
 
     return (
         <Card
-            style={[props.card.is_done ? styles.cardDone : styles.card]}>
+            style={[card.is_done ? styles.cardDone : styles.card]}>
             <CardTitle
-                title={props.card.title}
+                title={card.title}
             />
-            <CardContent text={props.card.content} style={styles.cardContent}/>
+            <CardContent text={card.content} style={styles.cardContent}/>
             <CardAction
                 separator={true}
                 inColumn={false}>
                 <CardButton
-                    onPress={() => props.onEditEvent(props.card.id)}
+                    onPress={() => onEditEvent(card.id)}
                     title="Edit"
                     color="#3949ab"
                 />
                 <CardButton
-                    onPress={() => props.onDeleteEvent(props.card.id)}
+                    onPress={() => onDeleteEvent(card.id)}
                     title="Delete"
                     color="red"
                 />
                 <CardButton
-                    onPress={() => props.toggleDone(props.card)}
+                    onPress={() => toggleDone(card)}
                     title="Done"
                     color="green"
                 />
                 <CardButton
-                    onPress={() => props.togglePriority(props.card, 0)}
+                    onPress={() => togglePriority(card, 0)}
                     title="none"
-                    color={[props.card.priority === 0 ? '#fff' : '#E50000']}
-                    style={[props.card.priority === 0 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
+                    color={[card.priority === 0 ? '#fff' : '#E50000']}
+                    style={[card.priority === 0 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                 />
                 <CardButton
-                    onPress={() => props.togglePriority(props.card, 1)}
+                    onPress={() => togglePriority(card, 1)}
                     title="!"
-                    color={[props.card.priority === 1 ? '#fff' : '#E50000']}
-                    style={[props.card.priority === 1 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
+                    color={[card.priority === 1 ? '#fff' : '#E50000']}
+                    style={[card.priority === 1 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                 />
                 <CardButton
-                    onPress={() => props.togglePriority(props.card, 2)}
+                    onPress={() => togglePriority(card, 2)}
                     title="!!"
-                    color={[props.card.priority === 2 ? '#fff' : '#E50000']}
-                    style={[props.card.priority === 2 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
+                    color={[card.priority === 2 ? '#fff' : '#E50000']}
+                    style={[card.priority === 2 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                 />
                 <CardButton
-                    onPress={() => props.togglePriority(props.card, 3)}
+                    onPress={() => togglePriority(card, 3)}
                     title="!!!"
-                    color={[props.card.priority === 3 ? '#fff' : '#E50000']}
-                    style={[props.card.priority === 3 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
+                    color={[card.priority === 3 ? '#fff' : '#E50000']}
+                    style={[card.priority === 3 ? styles.cardButtonPrioritySelected : styles.cardButtonPriority]}
                 />
             </CardAction>
         </Card>
