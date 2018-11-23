@@ -5,7 +5,7 @@ import AxiosClientService from "./AxiosClientService";
 
 export default class AuthService {
 
-    async logout(navigation) {
+    logout = async (navigation) => {
         await apiService.logout();
         await deviceStorage.removeItem('jwt_token');
         AxiosClientService.defaults.headers.common['Authorization'] = null;

@@ -30,38 +30,36 @@ class Dashboard extends React.Component {
         }
     }
 
-    componentDidMount() {
-        apiService.getCards().then((response) => {
+    componentDidMount = async () => {
+        const response = await apiService.getCards();
+        this.setState({
+            cards: response
+        })
+    };
+
+    modalOnOk = async () => {
+        try {
+            await apiService.addCard(this.state.cardTitle, this.state.cardContent);
+            const response = await apiService.getCards();
             this.setState({
                 cards: response
-            })
-        });
-    }
-
-    modalOnOk = () => {
-        apiService.addCard(this.state.cardTitle, this.state.cardContent).then((resp) => {
-            let a = 1;
-            apiService.getCards().then((response) => {
-                this.setState({
-                    cards: response
-                });
-                this.setState({openModal: false});
             });
-        })
+            this.setState({openModal: false});
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     modalOnCancel = () => {
         this.setState({openModal: false})
     };
 
-    onDeleteEvent = (id) => {
-        apiService.deleteCard(id).then(() => {
-            apiService.getCards().then((response) => {
-                this.setState({
-                    cards: response
-                });
-            });
-        })
+    onDeleteEvent = async (id) => {
+        await apiService.deleteCard(id);
+        const response = await apiService.getCards();
+        this.setState({
+            cards: response
+        });
     };
 
     onEditEvent = (id) => {
@@ -73,23 +71,19 @@ class Dashboard extends React.Component {
         });
     };
 
-    toggleDone = (card) => {
-        apiService.toggleDone(card).then(() => {
-            apiService.getCards().then((response) => {
-                this.setState({
-                    cards: response
-                });
-            });
+    toggleDone = async (card) => {
+        await apiService.toggleDone(card);
+        const response = await apiService.getCards();
+        this.setState({
+            cards: response
         });
     };
 
-    togglePriority = (card, priorityLevel) => {
-        apiService.togglePriority(card, priorityLevel).then(() => {
-            apiService.getCards().then((response) => {
-                this.setState({
-                    cards: response
-                });
-            });
+    togglePriority = async (card, priorityLevel) => {
+        await apiService.togglePriority(card, priorityLevel);
+        const response = await apiService.getCards();
+        this.setState({
+            cards: response
         });
     };
 

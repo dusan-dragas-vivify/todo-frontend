@@ -25,7 +25,7 @@ class Login extends React.Component {
         }
     }
 
-    async loginRequest() {
+    loginRequest = async () => {
         try {
             const response = await apiService.login(this.state.username, this.state.password);
             if (response.status === 200) {

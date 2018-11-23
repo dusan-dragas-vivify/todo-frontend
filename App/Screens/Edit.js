@@ -25,24 +25,24 @@ class Edit extends React.Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         const response = await apiService.getCard(this.props.navigation.state.params.id);
         this.setState({
             title: response.title,
             content: response.content
         })
-    }
+    };
 
     componentWillUnmount() {
         const {params} = this.props.navigation.state;
         params.reload();
-    }
+    };
 
-    async updateCard(id) {
-        try{
+    updateCard = async (id) => {
+        try {
             const response = await apiService.updateCard(id, this.state.title, this.state.content);
             this.props.navigation.navigate('Dashboard');
-        }catch (e) {
+        } catch (e) {
             console.log(e);
         }
     };

@@ -3,119 +3,152 @@ import AxiosClientService from "./AxiosClientService";
 
 export default class ApiService {
 
-    getCards = () => {
-        return AxiosClientService.get(`/tasks`)
-            .then((response) => response.data)
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-            });
+    getCards = async () => {
+        try {
+            const response = await AxiosClientService.get(`/tasks`);
+            return response.data;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
     };
 
-    getCard = (id) => {
-        return AxiosClientService.get(`/tasks/${id}`)
-            .then((response) => response.data)
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-            });
+    getCard = async (id) => {
+        try {
+            const response = await AxiosClientService.get(`/tasks/${id}`);
+            return response.data;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
     };
 
-    addCard = (title, content) => {
-        return AxiosClientService.post(`/tasks`, {
-            title: title,
-            content: content
-        })
-            .then((response) => {
-                response.data
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
+    addCard = async (title, content) => {
+        try {
+            const response = await AxiosClientService.post(`/tasks`, {
+                title: title,
+                content: content
             });
+            return response.data;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
     };
 
-    deleteCard = (id) => {
-        return AxiosClientService.delete(`/tasks/${id}`)
-            .then((response) => response.data)
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-            });
+    deleteCard = async (id) => {
+        try {
+            const response = await AxiosClientService.delete(`/tasks/${id}`);
+            return response.data;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
+
     };
 
-    updateCard = (id, title, content) => {
-        return AxiosClientService.patch(`/tasks/${id}`, {
-            title: title,
-            content: content
-        })
-            .then((response) => response)
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
+    updateCard = async (id, title, content) => {
+        try {
+            const response = await AxiosClientService.patch(`/tasks/${id}`, {
+                title: title,
+                content: content
             });
+            return response;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
     };
 
-    toggleDone = (card) => {
-        return AxiosClientService.patch(`/tasks/${card.id}`, {
-            'is_done': !card.is_done
-        })
-            .then((response) => response.data).catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
+    toggleDone = async (card) => {
+        try {
+            const response = await AxiosClientService.patch(`/tasks/${card.id}`, {
+                'is_done': !card.is_done
             });
+            return response.data;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
     };
 
-    togglePriority = (card, priorityLevel) => {
-        return AxiosClientService.patch(`/tasks/${card.id}`, {
-            'priority': priorityLevel
-        })
-            .then((response) => response.data).catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
+    togglePriority = async (card, priorityLevel) => {
+        try {
+            const response = await AxiosClientService.patch(`/tasks/${card.id}`, {
+                'priority': priorityLevel
             });
+            return response.data;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
     };
 
-    login = (username, password) => {
-        return AxiosClientService.post(`/login`, {
-            username: username,
-            password: password
-        }).then((response) =>
-            response
-        ).catch((error) =>
-            error.response
-        );
+    login = async (username, password) => {
+        try {
+            const response = await AxiosClientService.post(`/login`, {
+                username: username,
+                password: password
+            });
+            return response;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
     };
 
-    logout = () => {
-        return AxiosClientService.get(`/logout`)
-            .then((response) => response.data)
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-            });
+    logout = async () => {
+        try {
+            const response = await AxiosClientService.get(`/logout`);
+            return response.data;
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
+
     };
 
-    getUser = (jwt) => {
-        return AxiosClientService.get(`/user`, {
-            headers: {Authorization: `Bearer ${jwt}`}
-        })
-            .then((response) => response)
-            .catch((error) => {
-                console.log(error);
-                if (error.response) {
-                    console.log(error.response);
-                }
+    getUser = async (jwt) => {
+        try {
+            const response = await AxiosClientService.get(`/user`, {
+                headers: {Authorization: `Bearer ${jwt}`}
             });
-    }
+            return response
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response);
+            } else {
+                console.log(e);
+            }
+        }
+    };
 
 }
 

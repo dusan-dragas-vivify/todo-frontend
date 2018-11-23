@@ -6,7 +6,7 @@ import AxiosClientService from "../../src/services/AxiosClientService";
 
 class Splash extends React.Component {
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         const jwt = await deviceStorage.getItem('jwt_token');
         const response = await apiService.getUser(jwt);
         if (response && response.status === 200) {
