@@ -42,9 +42,9 @@ class Dashboard extends React.Component {
             await apiService.addCard(this.state.cardTitle, this.state.cardContent);
             const response = await apiService.getCards();
             this.setState({
-                cards: response
+                cards: response,
+                openModal: false
             });
-            this.setState({openModal: false});
         } catch (e) {
             console.log(e);
         }

@@ -7,7 +7,7 @@ const TodoList = ({...props}) => {
         return <ListItem
             key={key}
             number={key}
-            cards={props.cards}
+            card={prop}
             i={key}
             onEditEvent={props.onEditEvent}
             onDeleteEvent={props.onDeleteEvent}
